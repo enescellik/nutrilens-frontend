@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriLens</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; min-height: 100vh; }
+.app { max-width: 480px; margin: 0 auto; padding: 1rem; }
+.header { text-align: center; margin-bottom: 1.2rem; padding-top: 1rem; }
+.header h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #888; }
+.backend-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: white; border-radius: 10px; border: 0.5px solid #e0e0da; margin-bottom: 1rem; }
+.backend-bar input { flex: 1; font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 0.5px solid #ccc; background: #f9f9f7; color: #1a1a18; font-family: monospace; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-green { background: #1D9E75; }
+.dot-red { background: #E24B4A; }
+.dot-gray { background: #aaa; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 0.5px solid #ccc; background: white; color: #1a1a18; font-family: inherit; transition: all 0.15s; }
+.btn:hover { background: #f5f5f0; }
+.btn-primary { background: #1D9E75; border-color: #1D9E75; color: white; }
+.btn-primary:hover { background: #0F6E56; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.date-strip { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: white; border-radius: 10px; border: 0.5px solid #e0e0da; margin-bottom: 1rem; font-size: 13px; }
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
+.metric-card { background: #f5f5f0; border-radius: 8px; padding: 10px; text-align: center; }
+.metric-card.main { background: #E1F5EE; }
+.metric-card .label { font-size: 10px; color: #888; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.metric-card.main .label { color: #1D9E75; }
+.metric-card .value { font-size: 18px; font-weight: 500; }
+.metric-card.main .value { color: #0F6E56; }
+.metric-card .unit { font-size: 10px; color: #aaa; }
+.progress-bar { height: 4px; background: #e0e0da; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+.tabs { display: flex; gap: 4px; background: #e8e8e2; border-radius: 10px; padding: 3px; margin-bottom: 1rem; }
+.tab { flex: 1; text-align: center; padding: 7px; font-size: 13px; cursor: pointer; border-radius: 7px; color: #888; border: none; background: none; font-family: inherit; transition: all 0.15s; }
+.tab.active { background: white; color: #1a1a18; font-weight: 500; }
+.section-title { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.upload-zone { border: 1.5px dashed #ccc; border-radius: 12px; padding: 2rem 1rem; text-align: center; cursor: pointer; position: relative; margin-bottom: 1rem; transition: all 0.2s; background: white; }
+.upload-zone:hover { border-color: #1D9E75; background: #f0faf6; }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-zone i { font-size: 28px; color: #aaa; display: block; margin-bottom: 8px; }
+.analyzing { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 2rem; background: white; border: 0.5px solid #e0e0da; border-radius: 12px; margin-bottom: 1rem; }
+.analyzing img { width: 72px; height: 72px; border-radius: 8px; object-fit: cover; }
+.spinner { width: 28px; height: 28px; border: 2px solid #e0e0da; border-top-color: #1D9E75; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.result-card { background: white; border: 0.5px solid #e0e0da; border-radius: 12px; padding: 14px; margin-bottom: 1rem; }
+.result-macros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+.r-macro { text-align: center; background: #f5f5f0; border-radius: 8px; padding: 8px; }
+.r-macro .rv { font-size: 16px; font-weight: 500; }
+.r-macro .rl { font-size: 11px; color: #888; }
+.micro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
+.micro-item { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 0.5px solid #f0f0ea; }
+.micro-item .mn { color: #888; }
+.source-tag { font-size: 11px; color: #1D9E75; background: #E1F5EE; padding: 3px 8px; border-radius: 10px; margin-top: 8px; display: inline-block; }
+.btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+.meals-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+.meal-item { background: white; border: 0.5px solid #e0e0da; border-radius: 12px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
+.meal-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #f5f5f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.meal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.meal-info { flex: 1; min-width: 0; }
+.meal-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.meal-macros { font-size: 12px; color: #888; }
+.meal-kcal { font-size: 16px; font-weight: 500; color: #0F6E56; white-space: nowrap; }
+.delete-btn { background: none; border: none; cursor: pointer; color: #aaa; font-size: 16px; padding: 4px; border-radius: 6px; }
+.delete-btn:hover { color: #E24B4A; background: #fef0f0; }
+.empty-state { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
+.empty-state i { font-size: 28px; display: block; margin-bottom: 8px; }
+.error-box { background: #fef0f0; border: 0.5px solid #f09595; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #a32d2d; margin-bottom: 1rem; }
+.water-section { background: white; border-radius: 10px; border: 0.5px solid #e0e0da; padding: 10px 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+.water-dots { display: flex; gap: 4px; flex: 1; flex-wrap: wrap; }
+.water-dot { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #378ADD; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.water-dot.filled { background: #378ADD; }
+.water-dot i { font-size: 13px; color: #378ADD; }
+.water-dot.filled i { color: white; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🥗 NutriLens</h1>
+    <p>Fotoğraf çek, besin değerlerini öğren</p>
+  </div>
+
+  <div class="backend-bar">
+    <div class="status-dot dot-gray" id="statusDot"></div>
+    <span id="statusText" style="font-size:12px;color:#888;">Bağlanıyor...</span>
+    <input type="text" id="backendUrl" value="https://nutrilens-backend-production-3238.up.railway.app">
+    <button class="btn btn-sm" onclick="checkBackend()">Bağlan</button>
+  </div>
+
+  <div class="date-strip">
+    <span><strong id="todayDate"></strong></span>
+    <span style="font-weight:500;color:#0F6E56;" id="totalKcalMini">0 kcal</span>
+  </div>
+
+  <div class="summary-grid">
+    <div class="metric-card main">
+      <div class="label">Kalori</div>
+      <div class="value" id="totalKcal">0</div>
+      <div class="unit">/ 2000 kcal</div>
+      <div class="progress-bar"><div class="progress-fill" style="background:#1D9E75;width:0%" id="kcalBar"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Protein</div>
+      <div class="value" id="totalProtein">0</div>
+      <div class="unit">/ 150g</div>
+      <div class="progress-bar"><div class="progress-fill" style="background:#378ADD;width:0%" id="proteinBar"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Karb</div>
+      <div class="value" id="totalCarbs">0</div>
+      <div class="unit">/ 250g</div>
+      <div class="progress-bar"><div class="progress-fill" style="background:#EF9F27;width:0%" id="carbsBar"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Yağ</div>
+      <div class="value" id="totalFat">0</div>
+      <div class="unit">/ 65g</div>
+      <div class="progress-bar"><div class="progress-fill" style="background:#D85A30;width:0%" id="fatBar"></div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('meals')">🍽️ Öğünler</button>
+    <button class="tab" onclick="switchTab('add')">📷 Fotoğraf Ekle</button>
+    <button class="tab" onclick="switchTab('stats')">📊 Detaylar</button>
+  </div>
+
+  <div id="view-meals">
+    <div class="section-title">Su Takibi</div>
+    <div class="water-section">
+      <i class="ti ti-droplet" style="font-size:18px;color:#378ADD;flex-shrink:0;"></i>
+      <div class="water-dots" id="waterDots"></div>
+      <span style="font-size:12px;color:#888;"><span id="waterCount">0</span>/8</span>
+    </div>
+    <div class="section-title">Bugünkü Öğünler</div>
+    <div class="meals-list" id="mealsList">
+      <div class="empty-state"><i class="ti ti-camera-off"></i>Henüz öğün eklenmedi.</div>
+    </div>
+  </div>
+
+  <div id="view-add" style="display:none;">
+    <div id="uploadSection">
+      <div class="upload-zone">
+        <input type="file" accept="image/*" id="fileInput" onchange="handleFile(this)">
+        <i class="ti ti-camera-plus"></i>
+        <p style="font-size:14px;color:#888;">Yemek fotoğrafı seç</p>
+        <p style="font-size:12px;margin-top:4px;color:#1D9E75;">Gemini AI ile analiz edilecek</p>
+      </div>
+    </div>
+    <div id="analyzingSection" style="display:none;">
+      <div class="analyzing">
+        <img id="analyzingImg" src="" alt="">
+        <div class="spinner"></div>
+        <p style="font-size:13px;color:#888;">Yemek analiz ediliyor...</p>
+      </div>
+    </div>
+    <div id="resultSection" style="display:none;">
+      <div class="result-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div>
+            <div style="font-size:15px;font-weight:500;" id="rName">—</div>
+            <div style="font-size:12px;color:#888;" id="rDesc">—</div>
+            <div style="font-size:12px;color:#888;" id="rPortion">—</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:26px;font-weight:500;color:#0F6E56;" id="rKcal">0 <span style="font-size:12px;font-weight:400;color:#888;">kcal</span></div>
+          </div>
+        </div>
+        <div class="result-macros">
+          <div class="r-macro"><div class="rv" id="rProtein">0g</div><div class="rl">Protein</div></div>
+          <div class="r-macro"><div class="rv" id="rCarbs">0g</div><div class="rl">Karbonhidrat</div></div>
+          <div class="r-macro"><div class="rv" id="rFat">0g</div><div class="rl">Yağ</div></div>
+        </div>
+        <div class="section-title" style="margin-top:10px;margin-bottom:6px;">Mikro besinler</div>
+        <div class="micro-grid" id="microGrid"></div>
+        <div id="rSource"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="cancelResult()">✕ İptal</button>
+        <button class="btn btn-primary" onclick="saveMeal()">+ Kaydet</button>
+      </div>
+    </div>
+    <div id="errorSection" style="display:none;" class="error-box" id="errorSection">
+      ⚠️ <span id="errorMsg"></span>
+    </div>
+  </div>
+
+  <div id="view-stats" style="display:none;">
+    <div class="section-title">Mikro Besin Toplamları</div>
+    <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;">
+      <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GOALS = { kcal:2000, protein:150, carbs:250, fat:65 };
+let meals = [];
+let pending = null;
+let pendingImg = null;
+let waterCount = 0;
+let backendUrl = 'https://nutrilens-backend-production-3238.up.railway.app';
+
+function getUrl() { return document.getElementById('backendUrl').value.replace(/\/$/, ''); }
+
+async function checkBackend() {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  dot.className = 'status-dot dot-gray';
+  txt.textContent = 'Bağlanıyor...';
+  try {
+    const r = await fetch(getUrl() + '/health');
+    const d = await r.json();
+    if (d.status === 'ok') {
+      dot.className = 'status-dot dot-green';
+      txt.textContent = 'Backend bağlı ✓';
+      backendUrl = getUrl();
+      loadMeals();
+    } else throw new Error();
+  } catch {
+    dot.className = 'status-dot dot-red';
+    txt.textContent = 'Bağlantı hatası';
+  }
+}
+
+async function loadMeals() {
+  const date = new Date().toISOString().split('T')[0];
+  try {
+    const r = await fetch(backendUrl + '/meals?date=' + date);
+    meals = await r.json();
+    updateTotals();
+    renderMeals();
+  } catch(e) { console.error(e); }
+}
+
+function initDate() {
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('tr-TR', { weekday:'long', day:'numeric', month:'long' });
+}
+
+function initWater() {
+  const dots = document.getElementById('waterDots');
+  dots.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const d = document.createElement('div');
+    d.className = 'water-dot' + (i < waterCount ? ' filled' : '');
+    d.innerHTML = '<i class="ti ti-droplet"></i>';
+    d.onclick = () => { waterCount = i < waterCount ? i : i+1; initWater(); document.getElementById('waterCount').textContent = waterCount; };
+    dots.appendChild(d);
+  }
+}
+
+function switchTab(tab) {
+  ['meals','add','stats'].forEach((t,i) => {
+    document.querySelectorAll('.tab')[i].classList.toggle('active', t===tab);
+    document.getElementById('view-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+}
+
+async function handleFile(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => analyzeImage(e.target.result, file);
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+async function analyzeImage(dataUrl, file) {
+  document.getElementById('uploadSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('errorSection').style.display = 'none';
+  document.getElementById('analyzingSection').style.display = 'block';
+  document.getElementById('analyzingImg').src = dataUrl;
+  pendingImg = dataUrl;
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+    const r = await fetch(backendUrl + '/analyze', { method:'POST', body: formData });
+    if (!r.ok) throw new Error('Backend hatası: ' + r.status);
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+    pending = data;
+    showResult(data);
+  } catch(err) {
+    document.getElementById('analyzingSection').style.display = 'none';
+    document.getElementById('uploadSection').style.display = 'block';
+    document.getElementById('errorSection').style.display = 'block';
+    document.getElementById('errorMsg').textContent = err.message;
+  }
+}
+
+function showResult(r) {
+  document.getElementById('analyzingSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'block';
+  document.getElementById('rName').textContent = r.name || '—';
+  document.getElementById('rDesc').textContent = r.description || '';
+  document.getElementById('rPortion').textContent = r.portion || '';
+  document.getElementById('rKcal').innerHTML = Math.round(r.calories||0) + ' <span style="font-size:12px;font-weight:400;color:#888;">kcal</span>';
+  document.getElementById('rProtein').textContent = Math.round(r.protein||0) + 'g';
+  document.getElementById('rCarbs').textContent = Math.round(r.carbs||0) + 'g';
+  document.getElementById('rFat').textContent = Math.round(r.fat||0) + 'g';
+  const micros = [['Lif',r.fiber,'g'],['Şeker',r.sugar,'g'],['Sodyum',r.sodium,'mg'],['Potasyum',r.potassium,'mg'],['Kalsiyum',r.calcium,'mg'],['Demir',r.iron,'mg'],['Vit. C',r.vitamin_c,'mg'],['Vit. A',r.vitamin_a,'mcg']];
+  document.getElementById('microGrid').innerHTML = micros.map(([n,v,u]) => `<div class="micro-item"><span class="mn">${n}</span><span style="font-weight:500;">${v!=null?parseFloat(v).toFixed(1)+u:'—'}</span></div>`).join('');
+  document.getElementById('rSource').innerHTML = r.source ? `<span class="source-tag">📌 ${r.source}</span>` : '';
+}
+
+function cancelResult() {
+  pending = null; pendingImg = null;
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('uploadSection').style.display = 'block';
+}
+
+async function saveMeal() {
+  if (!pending) return;
+  const date = new Date().toISOString().split('T')[0];
+  try {
+    const r = await fetch(backendUrl + '/meals', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ ...pending, date, image_base64: pendingImg })
+    });
+    const saved = await r.json();
+    meals.push({ ...saved, imgSrc: pendingImg });
+    pending = null; pendingImg = null;
+    document.getElementById('resultSection').style.display = 'none';
+    document.getElementById('uploadSection').style.display = 'block';
+    updateTotals();
+    renderMeals();
+    switchTab('meals');
+  } catch(err) { alert('Kaydetme hatası: ' + err.message); }
+}
+
+async function deleteMeal(id, idx) {
+  try {
+    await fetch(backendUrl + '/meals/' + id, { method:'DELETE' });
+    meals.splice(idx, 1);
+    updateTotals();
+    renderMeals();
+  } catch { alert('Silme hatası'); }
+}
+
+function updateTotals() {
+  const t = meals.reduce((a,m) => ({
+    kcal:a.kcal+(m.calories||0), protein:a.protein+(m.protein||0),
+    carbs:a.carbs+(m.carbs||0), fat:a.fat+(m.fat||0),
+    fiber:a.fiber+(m.fiber||0), sugar:a.sugar+(m.sugar||0),
+    sodium:a.sodium+(m.sodium||0), potassium:a.potassium+(m.potassium||0),
+    calcium:a.calcium+(m.calcium||0), iron:a.iron+(m.iron||0),
+    vitamin_c:a.vitamin_c+(m.vitamin_c||0), vitamin_a:a.vitamin_a+(m.vitamin_a||0)
+  }), {kcal:0,protein:0,carbs:0,fat:0,fiber:0,sugar:0,sodium:0,potassium:0,calcium:0,iron:0,vitamin_c:0,vitamin_a:0});
+  document.getElementById('totalKcal').textContent = Math.round(t.kcal);
+  document.getElementById('totalKcalMini').textContent = Math.round(t.kcal) + ' kcal';
+  document.getElementById('totalProtein').textContent = Math.round(t.protein);
+  document.getElementById('totalCarbs').textContent = Math.round(t.carbs);
+  document.getElementById('totalFat').textContent = Math.round(t.fat);
+  const pct = (v,g) => Math.min(100,Math.round(v/g*100))+'%';
+  document.getElementById('kcalBar').style.width = pct(t.kcal,GOALS.kcal);
+  document.getElementById('proteinBar').style.width = pct(t.protein,GOALS.protein);
+  document.getElementById('carbsBar').style.width = pct(t.carbs,GOALS.carbs);
+  document.getElementById('fatBar').style.width = pct(t.fat,GOALS.fat);
+  if (meals.length > 0) {
+    const micros = [['Lif',t.fiber,'g'],['Şeker',t.sugar,'g'],['Sodyum',t.sodium,'mg'],['Potasyum',t.potassium,'mg'],['Kalsiyum',t.calcium,'mg'],['Demir',t.iron,'mg'],['Vit. C',t.vitamin_c,'mg'],['Vit. A',t.vitamin_a,'mcg']];
+    document.getElementById('totalMicroGrid').innerHTML = micros.map(([n,v,u]) => `<div class="micro-item"><span class="mn">${n}</span><span style="font-weight:500;">${parseFloat(v).toFixed(1)}${u}</span></div>`).join('');
+  }
+}
+
+function renderMeals() {
+  const list = document.getElementById('mealsList');
+  if (!meals.length) { list.innerHTML = '<div class="empty-state"><i class="ti ti-camera-off"></i>Henüz öğün eklenmedi.</div>'; return; }
+  list.innerHTML = meals.map((m,i) => `
+    <div class="meal-item">
+      <div class="meal-thumb">${m.image_base64||m.imgSrc?`<img src="${m.image_base64||m.imgSrc}" alt="${m.name}">`:'🥗'}</div>
+      <div class="meal-info">
+        <div class="meal-name">${m.name||'Yemek'}</div>
+        <div class="meal-macros">P:${Math.round(m.protein||0)}g · K:${Math.round(m.carbs||0)}g · Y:${Math.round(m.fat||0)}g</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <div class="meal-kcal">${Math.round(m.calories||0)}<span style="font-size:11px;font-weight:400;color:#888;">kcal</span></div>
+        <button class="delete-btn" onclick="deleteMeal(${m.id},${i})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+initDate();
+initWater();
+checkBackend();
+</script>
+</body>
+</html>
