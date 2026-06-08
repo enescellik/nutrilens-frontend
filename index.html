@@ -285,6 +285,22 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
     </div>
 
     <div id="view-stats" style="display:none;">
+  <div class="section-title">Günlük Kalori Dağılımı</div>
+  <div style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;margin-bottom:1rem;">
+    <canvas id="scatterChart" height="200"></canvas>
+    <div id="chartEmpty" style="text-align:center;color:#aaa;font-size:13px;padding:2rem 0;">Öğün ekledikçe grafik oluşacak.</div>
+  </div>
+
+  <div class="section-title">Kalan Hedefler</div>
+  <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
+    <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
+  </div>
+
+  <div class="section-title">Mikro Besin Toplamları</div>
+  <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;">
+    <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
+  </div>
+</div>
       <div class="section-title">Kalan Hedefler</div>
       <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
         <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
@@ -452,6 +468,7 @@ function switchTab(tab) {
     document.querySelectorAll('.tab')[i].classList.toggle('active', t===tab);
     document.getElementById('view-'+t).style.display = t===tab ? 'block' : 'none';
   });
+  if (tab === 'stats') updateScatterChart();
 }
 
 async function handleFile(input) {
@@ -613,5 +630,88 @@ function renderMeals() {
 
 init();
 </script>
-</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+let scatterChartInstance = null;
+
+function updateScatterChart() {
+  const canvas = document.getElementById('scatterChart');
+  const empty = document.getElementById('chartEmpty');
+
+  if (!meals.length) {
+    canvas.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  canvas.style.display = 'block';
+  empty.style.display = 'none';
+
+  const data = meals.map((m, i) => ({
+    x: i + 1,
+    y: Math.round(m.calories || 0),
+    label: m.name
+  }));
+
+  if (scatterChartInstance) scatterChartInstance.destroy();
+
+  scatterChartInstance = new Chart(canvas, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: 'Öğünler',
+        data: data,
+        backgroundColor: '#1D9E75',
+        borderColor: '#0F6E56',
+        pointRadius: 10,
+        pointHoverRadius: 13
+      }, {
+        label: 'Kalori Hedefi',
+        data: [{ x: 0, y: GOALS.kcal }, { x: meals.length + 1, y: GOALS.kcal }],
+        type: 'line',
+        borderColor: '#E24B4A',
+        borderDash: [6, 4],
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 0) {
+                const m = meals[ctx.dataIndex];
+                return `${m.name}: ${Math.round(m.calories || 0)} kcal`;
+              }
+              return `Hedef: ${GOALS.kcal} kcal`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Öğün sırası', font: { size: 11 }, color: '#888' },
+          ticks: {
+            stepSize: 1,
+            callback: (val) => {
+              const m = meals[val - 1];
+              return m ? (m.name.length > 8 ? m.name.substring(0, 8) + '…' : m.name) : '';
+            }
+          },
+          min: 0,
+          max: meals.length + 1
+        },
+        y: {
+          title: { display: true, text: 'Kalori (kcal)', font: { size: 11 }, color: '#888' },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+</script> </body>
 </html>
