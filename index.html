@@ -23,6 +23,7 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
 .btn-primary { background: #1D9E75; border-color: #1D9E75; color: white; }
 .btn-primary:hover { background: #0F6E56; }
 .btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-full { width: 100%; justify-content: center; padding: 12px; font-size: 15px; }
 .date-strip { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: white; border-radius: 10px; border: 0.5px solid #e0e0da; margin-bottom: 1rem; font-size: 13px; }
 .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
 .metric-card { background: #f5f5f0; border-radius: 8px; padding: 10px; text-align: center; }
@@ -35,7 +36,7 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
 .progress-bar { height: 4px; background: #e0e0da; border-radius: 2px; margin-top: 4px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 .tabs { display: flex; gap: 4px; background: #e8e8e2; border-radius: 10px; padding: 3px; margin-bottom: 1rem; }
-.tab { flex: 1; text-align: center; padding: 7px; font-size: 13px; cursor: pointer; border-radius: 7px; color: #888; border: none; background: none; font-family: inherit; transition: all 0.15s; }
+.tab { flex: 1; text-align: center; padding: 7px; font-size: 12px; cursor: pointer; border-radius: 7px; color: #888; border: none; background: none; font-family: inherit; transition: all 0.15s; }
 .tab.active { background: white; color: #1a1a18; font-weight: 500; }
 .section-title { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .upload-zone { border: 1.5px dashed #ccc; border-radius: 12px; padding: 2rem 1rem; text-align: center; cursor: pointer; position: relative; margin-bottom: 1rem; transition: all 0.2s; background: white; }
@@ -58,7 +59,7 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
 .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
 .meals-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
 .meal-item { background: white; border: 0.5px solid #e0e0da; border-radius: 12px; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
-.meal-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #f5f5f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.meal-thumb { width: 48px; height: 48px; border-radius: 8px; flex-shrink: 0; background: #f5f5f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .meal-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .meal-info { flex: 1; min-width: 0; }
 .meal-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
@@ -75,6 +76,25 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
 .water-dot.filled { background: #378ADD; }
 .water-dot i { font-size: 13px; color: #378ADD; }
 .water-dot.filled i { color: white; }
+
+/* Profil ekranı */
+.profile-screen { background: white; border-radius: 12px; border: 0.5px solid #e0e0da; padding: 20px; margin-bottom: 1rem; }
+.profile-screen h2 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+.profile-screen p { font-size: 13px; color: #888; margin-bottom: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+.form-group input, .form-group select { width: 100%; padding: 8px 12px; border-radius: 8px; border: 0.5px solid #ccc; font-size: 14px; font-family: inherit; background: #f9f9f7; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.goal-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; border: 1.5px solid #e0e0da; font-size: 13px; cursor: pointer; margin-right: 6px; margin-bottom: 6px; transition: all 0.15s; }
+.goal-badge.active { border-color: #1D9E75; background: #E1F5EE; color: #0F6E56; font-weight: 500; }
+
+/* Profil özet kartı */
+.profile-summary { background: white; border-radius: 10px; border: 0.5px solid #e0e0da; padding: 12px 14px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+.profile-summary .ps-info { font-size: 13px; }
+.profile-summary .ps-name { font-weight: 500; margin-bottom: 2px; }
+.profile-summary .ps-detail { color: #888; font-size: 12px; }
+.profile-summary .ps-kcal { font-size: 20px; font-weight: 500; color: #0F6E56; text-align: right; }
+.profile-summary .ps-kcal span { font-size: 11px; color: #888; font-weight: 400; display: block; }
 </style>
 </head>
 <body>
@@ -84,126 +104,300 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
     <p>Fotoğraf çek, besin değerlerini öğren</p>
   </div>
 
-  <div class="backend-bar">
-    <div class="status-dot dot-gray" id="statusDot"></div>
-    <span id="statusText" style="font-size:12px;color:#888;">Bağlanıyor...</span>
-    <input type="text" id="backendUrl" value="https://nutrilens-backend-production-3238.up.railway.app">
-    <button class="btn btn-sm" onclick="checkBackend()">Bağlan</button>
-  </div>
+  <!-- Profil kurulum ekranı -->
+  <div id="profileSetup" style="display:none;">
+    <div class="profile-screen">
+      <h2>👤 Profilini Kur</h2>
+      <p>Kişisel kalori hedefini hesaplamak için birkaç bilgiye ihtiyacım var.</p>
 
-  <div class="date-strip">
-    <span><strong id="todayDate"></strong></span>
-    <span style="font-weight:500;color:#0F6E56;" id="totalKcalMini">0 kcal</span>
-  </div>
-
-  <div class="summary-grid">
-    <div class="metric-card main">
-      <div class="label">Kalori</div>
-      <div class="value" id="totalKcal">0</div>
-      <div class="unit">/ 2000 kcal</div>
-      <div class="progress-bar"><div class="progress-fill" style="background:#1D9E75;width:0%" id="kcalBar"></div></div>
-    </div>
-    <div class="metric-card">
-      <div class="label">Protein</div>
-      <div class="value" id="totalProtein">0</div>
-      <div class="unit">/ 150g</div>
-      <div class="progress-bar"><div class="progress-fill" style="background:#378ADD;width:0%" id="proteinBar"></div></div>
-    </div>
-    <div class="metric-card">
-      <div class="label">Karb</div>
-      <div class="value" id="totalCarbs">0</div>
-      <div class="unit">/ 250g</div>
-      <div class="progress-bar"><div class="progress-fill" style="background:#EF9F27;width:0%" id="carbsBar"></div></div>
-    </div>
-    <div class="metric-card">
-      <div class="label">Yağ</div>
-      <div class="value" id="totalFat">0</div>
-      <div class="unit">/ 65g</div>
-      <div class="progress-bar"><div class="progress-fill" style="background:#D85A30;width:0%" id="fatBar"></div></div>
-    </div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('meals')">🍽️ Öğünler</button>
-    <button class="tab" onclick="switchTab('add')">📷 Fotoğraf Ekle</button>
-    <button class="tab" onclick="switchTab('stats')">📊 Detaylar</button>
-  </div>
-
-  <div id="view-meals">
-    <div class="section-title">Su Takibi</div>
-    <div class="water-section">
-      <i class="ti ti-droplet" style="font-size:18px;color:#378ADD;flex-shrink:0;"></i>
-      <div class="water-dots" id="waterDots"></div>
-      <span style="font-size:12px;color:#888;"><span id="waterCount">0</span>/8</span>
-    </div>
-    <div class="section-title">Bugünkü Öğünler</div>
-    <div class="meals-list" id="mealsList">
-      <div class="empty-state"><i class="ti ti-camera-off"></i>Henüz öğün eklenmedi.</div>
-    </div>
-  </div>
-
-  <div id="view-add" style="display:none;">
-    <div id="uploadSection">
-      <div class="upload-zone">
-        <input type="file" accept="image/*" id="fileInput" onchange="handleFile(this)">
-        <i class="ti ti-camera-plus"></i>
-        <p style="font-size:14px;color:#888;">Yemek fotoğrafı seç</p>
-        <p style="font-size:12px;margin-top:4px;color:#1D9E75;">Gemini AI ile analiz edilecek</p>
-      </div>
-    </div>
-    <div id="analyzingSection" style="display:none;">
-      <div class="analyzing">
-        <img id="analyzingImg" src="" alt="">
-        <div class="spinner"></div>
-        <p style="font-size:13px;color:#888;">Yemek analiz ediliyor...</p>
-      </div>
-    </div>
-    <div id="resultSection" style="display:none;">
-      <div class="result-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
-          <div>
-            <div style="font-size:15px;font-weight:500;" id="rName">—</div>
-            <div style="font-size:12px;color:#888;" id="rDesc">—</div>
-            <div style="font-size:12px;color:#888;" id="rPortion">—</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:26px;font-weight:500;color:#0F6E56;" id="rKcal">0 <span style="font-size:12px;font-weight:400;color:#888;">kcal</span></div>
-          </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ad</label>
+          <input type="text" id="pName" placeholder="Adın">
         </div>
-        <div class="result-macros">
-          <div class="r-macro"><div class="rv" id="rProtein">0g</div><div class="rl">Protein</div></div>
-          <div class="r-macro"><div class="rv" id="rCarbs">0g</div><div class="rl">Karbonhidrat</div></div>
-          <div class="r-macro"><div class="rv" id="rFat">0g</div><div class="rl">Yağ</div></div>
+        <div class="form-group">
+          <label>Yaş</label>
+          <input type="number" id="pAge" placeholder="25" min="10" max="100">
         </div>
-        <div class="section-title" style="margin-top:10px;margin-bottom:6px;">Mikro besinler</div>
-        <div class="micro-grid" id="microGrid"></div>
-        <div id="rSource"></div>
       </div>
-      <div class="btn-row">
-        <button class="btn" onclick="cancelResult()">✕ İptal</button>
-        <button class="btn btn-primary" onclick="saveMeal()">+ Kaydet</button>
+
+      <div class="form-group">
+        <label>Cinsiyet</label>
+        <select id="pGender">
+          <option value="male">Erkek</option>
+          <option value="female">Kadın</option>
+        </select>
       </div>
-    </div>
-    <div id="errorSection" style="display:none;" class="error-box" id="errorSection">
-      ⚠️ <span id="errorMsg"></span>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Boy (cm)</label>
+          <input type="number" id="pHeight" placeholder="175" min="100" max="250">
+        </div>
+        <div class="form-group">
+          <label>Kilo (kg)</label>
+          <input type="number" id="pWeight" placeholder="70" min="30" max="300">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Aktivite seviyesi</label>
+        <select id="pActivity">
+          <option value="1.2">Hareketsiz (masa başı iş, spor yok)</option>
+          <option value="1.375">Az aktif (haftada 1-3 gün hafif spor)</option>
+          <option value="1.55" selected>Orta aktif (haftada 3-5 gün spor)</option>
+          <option value="1.725">Çok aktif (haftada 6-7 gün yoğun spor)</option>
+          <option value="1.9">Ekstra aktif (günde 2 antrenman)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Hedefin</label>
+        <div>
+          <span class="goal-badge active" onclick="selectGoal(this, 'lose')">⬇️ Kilo ver</span>
+          <span class="goal-badge" onclick="selectGoal(this, 'maintain')">➡️ Koru</span>
+          <span class="goal-badge" onclick="selectGoal(this, 'gain')">⬆️ Kilo al</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="saveProfile()" style="margin-top:8px;">
+        Profili Kaydet ve Başla
+      </button>
     </div>
   </div>
 
-  <div id="view-stats" style="display:none;">
-    <div class="section-title">Mikro Besin Toplamları</div>
-    <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;">
-      <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
+  <!-- Ana uygulama -->
+  <div id="mainApp" style="display:none;">
+    <div class="backend-bar">
+      <div class="status-dot dot-gray" id="statusDot"></div>
+      <span id="statusText" style="font-size:12px;color:#888;">Bağlanıyor...</span>
+      <input type="text" id="backendUrl" value="https://nutrilens-backend-production-3238.up.railway.app">
+      <button class="btn btn-sm" onclick="checkBackend()">Bağlan</button>
+    </div>
+
+    <div class="profile-summary" id="profileSummary">
+      <div class="ps-info">
+        <div class="ps-name" id="psName">—</div>
+        <div class="ps-detail" id="psDetail">—</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="ps-kcal" id="psKcal">0<span>kcal hedef</span></div>
+        <button class="btn btn-sm" onclick="editProfile()" style="margin-top:4px;font-size:11px;">Düzenle</button>
+      </div>
+    </div>
+
+    <div class="date-strip">
+      <span><strong id="todayDate"></strong></span>
+      <span style="font-weight:500;color:#0F6E56;" id="totalKcalMini">0 kcal</span>
+    </div>
+
+    <div class="summary-grid">
+      <div class="metric-card main">
+        <div class="label">Kalori</div>
+        <div class="value" id="totalKcal">0</div>
+        <div class="unit" id="kcalGoalLabel">/ 2000 kcal</div>
+        <div class="progress-bar"><div class="progress-fill" style="background:#1D9E75;width:0%" id="kcalBar"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Protein</div>
+        <div class="value" id="totalProtein">0</div>
+        <div class="unit" id="proteinGoalLabel">/ 150g</div>
+        <div class="progress-bar"><div class="progress-fill" style="background:#378ADD;width:0%" id="proteinBar"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Karb</div>
+        <div class="value" id="totalCarbs">0</div>
+        <div class="unit" id="carbsGoalLabel">/ 250g</div>
+        <div class="progress-bar"><div class="progress-fill" style="background:#EF9F27;width:0%" id="carbsBar"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Yağ</div>
+        <div class="value" id="totalFat">0</div>
+        <div class="unit" id="fatGoalLabel">/ 65g</div>
+        <div class="progress-bar"><div class="progress-fill" style="background:#D85A30;width:0%" id="fatBar"></div></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('meals')">🍽️ Öğünler</button>
+      <button class="tab" onclick="switchTab('add')">📷 Fotoğraf Ekle</button>
+      <button class="tab" onclick="switchTab('stats')">📊 Detaylar</button>
+    </div>
+
+    <div id="view-meals">
+      <div class="section-title">Su Takibi</div>
+      <div class="water-section">
+        <i class="ti ti-droplet" style="font-size:18px;color:#378ADD;flex-shrink:0;"></i>
+        <div class="water-dots" id="waterDots"></div>
+        <span style="font-size:12px;color:#888;"><span id="waterCount">0</span>/8</span>
+      </div>
+      <div class="section-title">Bugünkü Öğünler</div>
+      <div class="meals-list" id="mealsList">
+        <div class="empty-state"><i class="ti ti-camera-off"></i>Henüz öğün eklenmedi.</div>
+      </div>
+    </div>
+
+    <div id="view-add" style="display:none;">
+      <div id="uploadSection">
+        <div class="upload-zone">
+          <input type="file" accept="image/*" id="fileInput" onchange="handleFile(this)">
+          <i class="ti ti-camera-plus"></i>
+          <p style="font-size:14px;color:#888;">Yemek fotoğrafı seç</p>
+          <p style="font-size:12px;margin-top:4px;color:#1D9E75;">Gemini AI ile analiz edilecek</p>
+        </div>
+      </div>
+      <div id="analyzingSection" style="display:none;">
+        <div class="analyzing">
+          <img id="analyzingImg" src="" alt="">
+          <div class="spinner"></div>
+          <p style="font-size:13px;color:#888;">Yemek analiz ediliyor...</p>
+        </div>
+      </div>
+      <div id="resultSection" style="display:none;">
+        <div class="result-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+            <div>
+              <div style="font-size:15px;font-weight:500;" id="rName">—</div>
+              <div style="font-size:12px;color:#888;" id="rDesc">—</div>
+              <div style="font-size:12px;color:#888;" id="rPortion">—</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:26px;font-weight:500;color:#0F6E56;" id="rKcal">0 <span style="font-size:12px;font-weight:400;color:#888;">kcal</span></div>
+            </div>
+          </div>
+          <div class="result-macros">
+            <div class="r-macro"><div class="rv" id="rProtein">0g</div><div class="rl">Protein</div></div>
+            <div class="r-macro"><div class="rv" id="rCarbs">0g</div><div class="rl">Karbonhidrat</div></div>
+            <div class="r-macro"><div class="rv" id="rFat">0g</div><div class="rl">Yağ</div></div>
+          </div>
+          <div class="section-title" style="margin-top:10px;margin-bottom:6px;">Mikro besinler</div>
+          <div class="micro-grid" id="microGrid"></div>
+          <div id="rSource"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="cancelResult()">✕ İptal</button>
+          <button class="btn btn-primary" onclick="saveMeal()">+ Kaydet</button>
+        </div>
+      </div>
+      <div id="errorSection" style="display:none;" class="error-box">
+        ⚠️ <span id="errorMsg"></span>
+      </div>
+    </div>
+
+    <div id="view-stats" style="display:none;">
+      <div class="section-title">Kalan Hedefler</div>
+      <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
+        <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
+      </div>
+      <div class="section-title">Mikro Besin Toplamları</div>
+      <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;">
+        <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-const GOALS = { kcal:2000, protein:150, carbs:250, fat:65 };
 let meals = [];
 let pending = null;
 let pendingImg = null;
 let waterCount = 0;
 let backendUrl = 'https://nutrilens-backend-production-3238.up.railway.app';
+let GOALS = { kcal: 2000, protein: 150, carbs: 250, fat: 65 };
+let selectedGoal = 'lose';
+
+function calculateGoals(profile) {
+  const { gender, age, height, weight, activity, goal } = profile;
+  let bmr;
+  if (gender === 'male') {
+    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+  } else {
+    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+  }
+  let tdee = bmr * parseFloat(activity);
+  if (goal === 'lose') tdee -= 500;
+  else if (goal === 'gain') tdee += 300;
+
+  const kcal = Math.round(tdee);
+  const protein = Math.round(weight * 2);
+  const fat = Math.round((kcal * 0.25) / 9);
+  const carbs = Math.round((kcal - (protein * 4) - (fat * 9)) / 4);
+
+  return { kcal, protein, carbs, fat };
+}
+
+function selectGoal(el, goal) {
+  selectedGoal = goal;
+  document.querySelectorAll('.goal-badge').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function saveProfile() {
+  const name = document.getElementById('pName').value.trim();
+  const age = parseInt(document.getElementById('pAge').value);
+  const gender = document.getElementById('pGender').value;
+  const height = parseInt(document.getElementById('pHeight').value);
+  const weight = parseInt(document.getElementById('pWeight').value);
+  const activity = document.getElementById('pActivity').value;
+
+  if (!name || !age || !height || !weight) {
+    alert('Lütfen tüm alanları doldur!');
+    return;
+  }
+
+  const profile = { name, age, gender, height, weight, activity, goal: selectedGoal };
+  localStorage.setItem('nutrilens_profile', JSON.stringify(profile));
+
+  GOALS = calculateGoals(profile);
+  localStorage.setItem('nutrilens_goals', JSON.stringify(GOALS));
+
+  showMainApp(profile);
+}
+
+function editProfile() {
+  document.getElementById('profileSetup').style.display = 'block';
+  document.getElementById('mainApp').style.display = 'none';
+  const profile = JSON.parse(localStorage.getItem('nutrilens_profile') || '{}');
+  if (profile.name) {
+    document.getElementById('pName').value = profile.name;
+    document.getElementById('pAge').value = profile.age;
+    document.getElementById('pGender').value = profile.gender;
+    document.getElementById('pHeight').value = profile.height;
+    document.getElementById('pWeight').value = profile.weight;
+    document.getElementById('pActivity').value = profile.activity;
+  }
+}
+
+function showMainApp(profile) {
+  document.getElementById('profileSetup').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+
+  const goalLabels = { lose: 'Kilo ver', maintain: 'Koru', gain: 'Kilo al' };
+  const activityLabels = { '1.2': 'Hareketsiz', '1.375': 'Az aktif', '1.55': 'Orta aktif', '1.725': 'Çok aktif', '1.9': 'Ekstra aktif' };
+
+  document.getElementById('psName').textContent = profile.name;
+  document.getElementById('psDetail').textContent = `${profile.weight}kg · ${profile.height}cm · ${activityLabels[profile.activity]} · ${goalLabels[profile.goal]}`;
+  document.getElementById('psKcal').innerHTML = `${GOALS.kcal}<span>kcal hedef</span>`;
+  document.getElementById('kcalGoalLabel').textContent = `/ ${GOALS.kcal} kcal`;
+  document.getElementById('proteinGoalLabel').textContent = `/ ${GOALS.protein}g`;
+  document.getElementById('carbsGoalLabel').textContent = `/ ${GOALS.carbs}g`;
+  document.getElementById('fatGoalLabel').textContent = `/ ${GOALS.fat}g`;
+
+  initDate();
+  initWater();
+  checkBackend();
+}
+
+function init() {
+  const profile = JSON.parse(localStorage.getItem('nutrilens_profile') || 'null');
+  const goals = JSON.parse(localStorage.getItem('nutrilens_goals') || 'null');
+  if (profile && goals) {
+    GOALS = goals;
+    showMainApp(profile);
+  } else {
+    document.getElementById('profileSetup').style.display = 'block';
+  }
+}
 
 function getUrl() { return document.getElementById('backendUrl').value.replace(/\/$/, ''); }
 
@@ -352,16 +546,47 @@ function updateTotals() {
     calcium:a.calcium+(m.calcium||0), iron:a.iron+(m.iron||0),
     vitamin_c:a.vitamin_c+(m.vitamin_c||0), vitamin_a:a.vitamin_a+(m.vitamin_a||0)
   }), {kcal:0,protein:0,carbs:0,fat:0,fiber:0,sugar:0,sodium:0,potassium:0,calcium:0,iron:0,vitamin_c:0,vitamin_a:0});
+
   document.getElementById('totalKcal').textContent = Math.round(t.kcal);
   document.getElementById('totalKcalMini').textContent = Math.round(t.kcal) + ' kcal';
   document.getElementById('totalProtein').textContent = Math.round(t.protein);
   document.getElementById('totalCarbs').textContent = Math.round(t.carbs);
   document.getElementById('totalFat').textContent = Math.round(t.fat);
+
   const pct = (v,g) => Math.min(100,Math.round(v/g*100))+'%';
   document.getElementById('kcalBar').style.width = pct(t.kcal,GOALS.kcal);
   document.getElementById('proteinBar').style.width = pct(t.protein,GOALS.protein);
   document.getElementById('carbsBar').style.width = pct(t.carbs,GOALS.carbs);
   document.getElementById('fatBar').style.width = pct(t.fat,GOALS.fat);
+
+  // Kalan hedefler
+  const remaining = {
+    kcal: Math.max(0, GOALS.kcal - t.kcal),
+    protein: Math.max(0, GOALS.protein - t.protein),
+    carbs: Math.max(0, GOALS.carbs - t.carbs),
+    fat: Math.max(0, GOALS.fat - t.fat)
+  };
+  document.getElementById('remainingGrid').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
+        <div style="font-size:18px;font-weight:500;color:#0F6E56;">${Math.round(remaining.kcal)}</div>
+        <div style="font-size:11px;color:#888;">kcal kalan</div>
+      </div>
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
+        <div style="font-size:18px;font-weight:500;color:#378ADD;">${Math.round(remaining.protein)}g</div>
+        <div style="font-size:11px;color:#888;">protein kalan</div>
+      </div>
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
+        <div style="font-size:18px;font-weight:500;color:#EF9F27;">${Math.round(remaining.carbs)}g</div>
+        <div style="font-size:11px;color:#888;">karb kalan</div>
+      </div>
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
+        <div style="font-size:18px;font-weight:500;color:#D85A30;">${Math.round(remaining.fat)}g</div>
+        <div style="font-size:11px;color:#888;">yağ kalan</div>
+      </div>
+    </div>
+  `;
+
   if (meals.length > 0) {
     const micros = [['Lif',t.fiber,'g'],['Şeker',t.sugar,'g'],['Sodyum',t.sodium,'mg'],['Potasyum',t.potassium,'mg'],['Kalsiyum',t.calcium,'mg'],['Demir',t.iron,'mg'],['Vit. C',t.vitamin_c,'mg'],['Vit. A',t.vitamin_a,'mcg']];
     document.getElementById('totalMicroGrid').innerHTML = micros.map(([n,v,u]) => `<div class="micro-item"><span class="mn">${n}</span><span style="font-weight:500;">${parseFloat(v).toFixed(1)}${u}</span></div>`).join('');
@@ -386,9 +611,7 @@ function renderMeals() {
   `).join('');
 }
 
-initDate();
-initWater();
-checkBackend();
+init();
 </script>
 </body>
 </html>
