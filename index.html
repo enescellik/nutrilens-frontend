@@ -284,34 +284,88 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
       </div>
     </div>
 
-    <div id="view-stats" style="display:none;">
-  <div class="section-title">Günlük Kalori Dağılımı</div>
-  <div style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;margin-bottom:1rem;">
-    <canvas id="scatterChart" height="200"></canvas>
-    <div id="chartEmpty" style="text-align:center;color:#aaa;font-size:13px;padding:2rem 0;">Öğün ekledikçe grafik oluşacak.</div>
-  </div>
+    async function loadSuggestions() {
+  const area = document.getElementById('suggestionsArea');
+  area.innerHTML = '<div style="text-align:center;padding:2rem;color:#888;font-size:13px;"><div class="spinner" style="margin:0 auto 12px;"></div>Öneriler hazırlanıyor...</div>';
 
-  <div class="section-title">Kalan Hedefler</div>
-  <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
-    <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
-  </div>
+  try {
+    const date = new Date().toISOString().split('T')[0];
+    const goalsStr = encodeURIComponent(JSON.stringify(GOALS));
+    const r = await fetch(`${backendUrl}/suggestions?date=${date}&goals=${goalsStr}`);
+    const data = await r.json();
 
-  <div class="section-title">Mikro Besin Toplamları</div>
-  <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;">
-    <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
-  </div>
-</div>
-      <div class="section-title">Kalan Hedefler</div>
-      <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
-        <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
-      </div>
-      <div class="section-title">Mikro Besin Toplamları</div>
-      <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;">
-        <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
-      </div>
-    </div>
-  </div>
-</div>
+    if (data.error) throw new Error(data.error);
+
+    const { suggestions, todayTotals } = data;
+
+    let html = '';
+
+    if (suggestions[0] && suggestions[0].weekly_tip) {
+      html += `<div style="background:#E1F5EE;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:13px;color:#0F6E56;">
+        📈 <strong>Haftalık trend:</strong> ${suggestions[0].weekly_tip}
+      </div>`;
+    }
+
+    suggestions.forEach(s => {
+      html += `
+        <div onclick="loadRecipe('${s.food.replace(/'/g, '')}')" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#1D9E75'" onmouseout="this.style.borderColor='#e0e0da'">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="flex:1;">
+              <div style="font-size:15px;font-weight:500;margin-bottom:3px;">🍽️ ${s.food}</div>
+              <div style="font-size:12px;color:#1D9E75;margin-bottom:3px;">💡 ${s.reason}</div>
+              <div style="font-size:12px;color:#888;">✅ ${s.nutrients}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:10px;">
+              <div style="font-size:16px;font-weight:500;color:#0F6E56;">${s.calories}</div>
+              <div style="font-size:11px;color:#aaa;">kcal</div>
+              <div style="font-size:11px;color:#1D9E75;margin-top:4px;">Tarif →</div>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    area.innerHTML = html;
+  } catch(err) {
+    area.innerHTML = `<div style="background:#fef0f0;border:0.5px solid #f09595;border-radius:10px;padding:12px;font-size:13px;color:#a32d2d;">⚠️ ${err.message}</div>`;
+  }
+}
+
+async function loadRecipe(foodName) {
+  const modal = document.getElementById('recipeModal');
+  const content = document.getElementById('recipeContent');
+  modal.style.display = 'block';
+  content.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="spinner" style="margin:0 auto 12px;"></div><p style="color:#888;font-size:13px;">Tarif hazırlanıyor...</p></div>';
+
+  try {
+    const r = await fetch(`${backendUrl}/recipe?food=${encodeURIComponent(foodName)}`);
+    const recipe = await r.json();
+
+    if (recipe.error) throw new Error(recipe.error);
+
+    content.innerHTML = `
+      <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">🍽️ ${recipe.name}</h2>
+      <div style="font-size:13px;color:#888;margin-bottom:16px;">⏱️ ${recipe.time} · 👤 ${recipe.servings}</div>
+
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:#1a1a18;">Malzemeler</div>
+      <ul style="list-style:none;margin-bottom:16px;">
+        ${recipe.ingredients.map(i => `<li style="font-size:13px;padding:4px 0;border-bottom:0.5px solid #f0f0ea;">• ${i}</li>`).join('')}
+      </ul>
+
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:#1a1a18;">Yapılışı</div>
+      <ol style="padding-left:16px;margin-bottom:16px;">
+        ${recipe.steps.map(s => `<li style="font-size:13px;padding:4px 0;color:#444;">${s}</li>`).join('')}
+      </ol>
+
+      ${recipe.tip ? `<div style="background:#E1F5EE;border-radius:8px;padding:10px;font-size:13px;color:#0F6E56;">💡 <strong>Püf nokta:</strong> ${recipe.tip}</div>` : ''}
+    `;
+  } catch(err) {
+    content.innerHTML = `<div style="color:#a32d2d;font-size:13px;">⚠️ ${err.message}</div>`;
+  }
+}
+
+function closeRecipe() {
+  document.getElementById('recipeModal').style.display = 'none';
+}
 
 <script>
 let meals = [];
