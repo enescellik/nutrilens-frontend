@@ -12,18 +12,27 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
 .header { text-align: center; margin-bottom: 1.2rem; padding-top: 1rem; }
 .header h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
 .header p { font-size: 13px; color: #888; }
+.card { background: white; border-radius: 12px; border: 0.5px solid #e0e0da; padding: 20px; margin-bottom: 1rem; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 0.5px solid #ccc; background: white; color: #1a1a18; font-family: inherit; transition: all 0.15s; }
+.btn:hover { background: #f5f5f0; }
+.btn-primary { background: #1D9E75; border-color: #1D9E75; color: white; }
+.btn-primary:hover { background: #0F6E56; }
+.btn-full { width: 100%; justify-content: center; padding: 12px; font-size: 15px; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+.form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 0.5px solid #ccc; font-size: 14px; font-family: inherit; background: #f9f9f7; transition: border 0.15s; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #1D9E75; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.error-box { background: #fef0f0; border: 0.5px solid #f09595; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #a32d2d; margin-bottom: 1rem; }
+.success-box { background: #E1F5EE; border: 0.5px solid #9FE1CB; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #0F6E56; margin-bottom: 1rem; }
+.link-btn { background: none; border: none; color: #1D9E75; cursor: pointer; font-size: 13px; font-family: inherit; text-decoration: underline; }
 .backend-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: white; border-radius: 10px; border: 0.5px solid #e0e0da; margin-bottom: 1rem; }
 .backend-bar input { flex: 1; font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 0.5px solid #ccc; background: #f9f9f7; color: #1a1a18; font-family: monospace; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .dot-green { background: #1D9E75; }
 .dot-red { background: #E24B4A; }
 .dot-gray { background: #aaa; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 0.5px solid #ccc; background: white; color: #1a1a18; font-family: inherit; transition: all 0.15s; }
-.btn:hover { background: #f5f5f0; }
-.btn-primary { background: #1D9E75; border-color: #1D9E75; color: white; }
-.btn-primary:hover { background: #0F6E56; }
-.btn-sm { padding: 4px 10px; font-size: 12px; }
-.btn-full { width: 100%; justify-content: center; padding: 12px; font-size: 15px; }
 .date-strip { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: white; border-radius: 10px; border: 0.5px solid #e0e0da; margin-bottom: 1rem; font-size: 13px; }
 .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
 .metric-card { background: #f5f5f0; border-radius: 8px; padding: 10px; text-align: center; }
@@ -69,32 +78,15 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
 .delete-btn:hover { color: #E24B4A; background: #fef0f0; }
 .empty-state { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
 .empty-state i { font-size: 28px; display: block; margin-bottom: 8px; }
-.error-box { background: #fef0f0; border: 0.5px solid #f09595; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #a32d2d; margin-bottom: 1rem; }
 .water-section { background: white; border-radius: 10px; border: 0.5px solid #e0e0da; padding: 10px 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
 .water-dots { display: flex; gap: 4px; flex: 1; flex-wrap: wrap; }
 .water-dot { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #378ADD; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .water-dot.filled { background: #378ADD; }
 .water-dot i { font-size: 13px; color: #378ADD; }
 .water-dot.filled i { color: white; }
-
-/* Profil ekranı */
-.profile-screen { background: white; border-radius: 12px; border: 0.5px solid #e0e0da; padding: 20px; margin-bottom: 1rem; }
-.profile-screen h2 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
-.profile-screen p { font-size: 13px; color: #888; margin-bottom: 20px; }
-.form-group { margin-bottom: 14px; }
-.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
-.form-group input, .form-group select { width: 100%; padding: 8px 12px; border-radius: 8px; border: 0.5px solid #ccc; font-size: 14px; font-family: inherit; background: #f9f9f7; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .goal-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; border: 1.5px solid #e0e0da; font-size: 13px; cursor: pointer; margin-right: 6px; margin-bottom: 6px; transition: all 0.15s; }
 .goal-badge.active { border-color: #1D9E75; background: #E1F5EE; color: #0F6E56; font-weight: 500; }
-
-/* Profil özet kartı */
 .profile-summary { background: white; border-radius: 10px; border: 0.5px solid #e0e0da; padding: 12px 14px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
-.profile-summary .ps-info { font-size: 13px; }
-.profile-summary .ps-name { font-weight: 500; margin-bottom: 2px; }
-.profile-summary .ps-detail { color: #888; font-size: 12px; }
-.profile-summary .ps-kcal { font-size: 20px; font-weight: 500; color: #0F6E56; text-align: right; }
-.profile-summary .ps-kcal span { font-size: 11px; color: #888; font-weight: 400; display: block; }
 </style>
 </head>
 <body>
@@ -104,65 +96,109 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
     <p>Fotoğraf çek, besin değerlerini öğren</p>
   </div>
 
-  <!-- Profil kurulum ekranı -->
-  <div id="profileSetup" style="display:none;">
-    <div class="profile-screen">
-      <h2>👤 Profilini Kur</h2>
-      <p>Kişisel kalori hedefini hesaplamak için birkaç bilgiye ihtiyacım var.</p>
+  <!-- Giriş/Kayıt ekranı -->
+  <div id="authScreen">
+    <div class="backend-bar">
+      <div class="status-dot dot-gray" id="authStatusDot"></div>
+      <span id="authStatusText" style="font-size:12px;color:#888;">Bağlanıyor...</span>
+      <input type="text" id="authBackendUrl" value="https://nutrilens-backend-production-3238.up.railway.app">
+      <button class="btn btn-sm" onclick="checkBackendAuth()">Bağlan</button>
+    </div>
 
+    <div id="loginForm" class="card">
+      <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">Giriş Yap</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:20px;">Hesabına giriş yap</p>
+      <div id="loginError" style="display:none;" class="error-box"></div>
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="loginEmail" placeholder="ornek@email.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="login()">Giriş Yap</button>
+      <p style="text-align:center;margin-top:14px;font-size:13px;color:#888;">
+        Hesabın yok mu? <button class="link-btn" onclick="showRegister()">Kayıt ol</button>
+      </p>
+    </div>
+
+    <div id="registerForm" class="card" style="display:none;">
+      <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">Kayıt Ol</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:20px;">Yeni hesap oluştur</p>
+      <div id="registerError" style="display:none;" class="error-box"></div>
       <div class="form-row">
         <div class="form-group">
           <label>Ad</label>
-          <input type="text" id="pName" placeholder="Adın">
+          <input type="text" id="regFirstName" placeholder="Adın">
         </div>
+        <div class="form-group">
+          <label>Soyad</label>
+          <input type="text" id="regLastName" placeholder="Soyadın">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="regEmail" placeholder="ornek@email.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="regPassword" placeholder="En az 6 karakter">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="register()">Kayıt Ol</button>
+      <p style="text-align:center;margin-top:14px;font-size:13px;color:#888;">
+        Hesabın var mı? <button class="link-btn" onclick="showLogin()">Giriş yap</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Profil kurulum ekranı -->
+  <div id="profileSetup" style="display:none;">
+    <div class="card">
+      <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">👤 Profilini Tamamla</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:20px;">Kişisel kalori hedefini hesaplayalım.</p>
+      <div class="form-row">
         <div class="form-group">
           <label>Yaş</label>
           <input type="number" id="pAge" placeholder="25" min="10" max="100">
         </div>
+        <div class="form-group">
+          <label>Cinsiyet</label>
+          <select id="pGender">
+            <option value="male">Erkek</option>
+            <option value="female">Kadın</option>
+          </select>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label>Cinsiyet</label>
-        <select id="pGender">
-          <option value="male">Erkek</option>
-          <option value="female">Kadın</option>
-        </select>
-      </div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Boy (cm)</label>
-          <input type="number" id="pHeight" placeholder="175" min="100" max="250">
+          <input type="number" id="pHeight" placeholder="175">
         </div>
         <div class="form-group">
           <label>Kilo (kg)</label>
-          <input type="number" id="pWeight" placeholder="70" min="30" max="300">
+          <input type="number" id="pWeight" placeholder="70">
         </div>
       </div>
-
       <div class="form-group">
         <label>Aktivite seviyesi</label>
         <select id="pActivity">
-          <option value="1.2">Hareketsiz (masa başı iş, spor yok)</option>
-          <option value="1.375">Az aktif (haftada 1-3 gün hafif spor)</option>
-          <option value="1.55" selected>Orta aktif (haftada 3-5 gün spor)</option>
-          <option value="1.725">Çok aktif (haftada 6-7 gün yoğun spor)</option>
-          <option value="1.9">Ekstra aktif (günde 2 antrenman)</option>
+          <option value="1.2">Hareketsiz</option>
+          <option value="1.375">Az aktif (haftada 1-3 gün)</option>
+          <option value="1.55" selected>Orta aktif (haftada 3-5 gün)</option>
+          <option value="1.725">Çok aktif (haftada 6-7 gün)</option>
+          <option value="1.9">Ekstra aktif</option>
         </select>
       </div>
-
       <div class="form-group">
         <label>Hedefin</label>
         <div>
-          <span class="goal-badge active" onclick="selectGoal(this, 'lose')">⬇️ Kilo ver</span>
-          <span class="goal-badge" onclick="selectGoal(this, 'maintain')">➡️ Koru</span>
-          <span class="goal-badge" onclick="selectGoal(this, 'gain')">⬆️ Kilo al</span>
+          <span class="goal-badge active" onclick="selectGoal(this,'lose')">⬇️ Kilo ver</span>
+          <span class="goal-badge" onclick="selectGoal(this,'maintain')">➡️ Koru</span>
+          <span class="goal-badge" onclick="selectGoal(this,'gain')">⬆️ Kilo al</span>
         </div>
       </div>
-
-      <button class="btn btn-primary btn-full" onclick="saveProfile()" style="margin-top:8px;">
-        Profili Kaydet ve Başla
-      </button>
+      <button class="btn btn-primary btn-full" onclick="saveProfile()" style="margin-top:8px;">Kaydet ve Başla</button>
     </div>
   </div>
 
@@ -176,13 +212,16 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
     </div>
 
     <div class="profile-summary" id="profileSummary">
-      <div class="ps-info">
-        <div class="ps-name" id="psName">—</div>
-        <div class="ps-detail" id="psDetail">—</div>
+      <div>
+        <div style="font-weight:500;font-size:14px;" id="psName">—</div>
+        <div style="font-size:12px;color:#888;" id="psDetail">—</div>
       </div>
       <div style="text-align:right;">
-        <div class="ps-kcal" id="psKcal">0<span>kcal hedef</span></div>
-        <button class="btn btn-sm" onclick="editProfile()" style="margin-top:4px;font-size:11px;">Düzenle</button>
+        <div style="font-size:20px;font-weight:500;color:#0F6E56;" id="psKcal">0<span style="font-size:11px;color:#888;font-weight:400;"> kcal hedef</span></div>
+        <div style="display:flex;gap:6px;justify-content:flex-end;margin-top:4px;">
+          <button class="btn btn-sm" onclick="showProfileEdit()">Düzenle</button>
+          <button class="btn btn-sm" onclick="logout()" style="color:#E24B4A;border-color:#E24B4A;">Çıkış</button>
+        </div>
       </div>
     </div>
 
@@ -285,30 +324,29 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
     </div>
 
     <div id="view-stats" style="display:none;">
-  <div class="section-title">Günlük Kalori Dağılımı</div>
-  <div style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;margin-bottom:1rem;">
-    <canvas id="scatterChart" height="200" style="display:none;"></canvas>
-    <div id="chartEmpty" style="text-align:center;color:#aaa;font-size:13px;padding:2rem 0;">Öğün ekledikçe grafik oluşacak.</div>
-  </div>
-
-  <div class="section-title">Kalan Hedefler</div>
-  <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
-    <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
-  </div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-    <div class="section-title" style="margin-bottom:0;">Akıllı Öneriler</div>
-    <button class="btn btn-sm" onclick="loadSuggestions()">🔄 Yenile</button>
-  </div>
-  <div id="suggestionsArea" style="margin-bottom:1rem;">
-    <div style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;text-align:center;color:#aaa;font-size:13px;">
-      Öneri yüklemek için "Yenile" butonuna bas.
+      <div class="section-title">Günlük Kalori Dağılımı</div>
+      <div style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;margin-bottom:1rem;">
+        <canvas id="scatterChart" height="200" style="display:none;"></canvas>
+        <div id="chartEmpty" style="text-align:center;color:#aaa;font-size:13px;padding:2rem 0;">Öğün ekledikçe grafik oluşacak.</div>
+      </div>
+      <div class="section-title">Kalan Hedefler</div>
+      <div id="remainingGrid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
+        <div style="font-size:13px;color:#888;text-align:center;padding:8px 0;">Öğün ekledikçe burası dolacak.</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="section-title" style="margin-bottom:0;">Akıllı Öneriler</div>
+        <button class="btn btn-sm" onclick="loadSuggestions()">🔄 Yenile</button>
+      </div>
+      <div id="suggestionsArea" style="margin-bottom:1rem;">
+        <div style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;text-align:center;color:#aaa;font-size:13px;">
+          Öneri yüklemek için "Yenile" butonuna bas.
+        </div>
+      </div>
+      <div class="section-title">Mikro Besin Toplamları</div>
+      <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
+        <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
+      </div>
     </div>
-  </div>
-
-  <div class="section-title">Mikro Besin Toplamları</div>
-  <div id="totalMicroGrid" class="micro-grid" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px;margin-bottom:1rem;">
-    <div style="font-size:13px;color:#888;grid-column:span 2;text-align:center;padding:12px 0;">Öğün ekledikçe burası dolacak.</div>
   </div>
 </div>
 
@@ -320,32 +358,131 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
+const BACKEND_URL = 'https://nutrilens-backend-production-3238.up.railway.app';
+let backendUrl = BACKEND_URL;
+let authToken = localStorage.getItem('nutrilens_token');
+let currentUser = JSON.parse(localStorage.getItem('nutrilens_user') || 'null');
 let meals = [];
 let pending = null;
 let pendingImg = null;
 let waterCount = 0;
-let backendUrl = 'https://nutrilens-backend-production-3238.up.railway.app';
 let GOALS = { kcal: 2000, protein: 150, carbs: 250, fat: 65 };
 let selectedGoal = 'lose';
+let scatterChartInstance = null;
 
+function getUrl() { return document.getElementById('backendUrl')?.value.replace(/\/$/, '') || backendUrl; }
+function getAuthHeaders() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }; }
+
+// Auth fonksiyonları
+async function checkBackendAuth() {
+  const dot = document.getElementById('authStatusDot');
+  const txt = document.getElementById('authStatusText');
+  dot.className = 'status-dot dot-gray';
+  txt.textContent = 'Bağlanıyor...';
+  try {
+    const url = document.getElementById('authBackendUrl').value.replace(/\/$/, '');
+    const r = await fetch(url + '/health');
+    const d = await r.json();
+    if (d.status === 'ok') {
+      dot.className = 'status-dot dot-green';
+      txt.textContent = 'Backend bağlı ✓';
+      backendUrl = url;
+    } else throw new Error();
+  } catch {
+    dot.className = 'status-dot dot-red';
+    txt.textContent = 'Bağlantı hatası';
+  }
+}
+
+function showLogin() {
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('registerForm').style.display = 'none';
+}
+
+function showRegister() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = 'block';
+}
+
+async function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errBox = document.getElementById('loginError');
+  errBox.style.display = 'none';
+  if (!email || !password) { errBox.textContent = 'Email ve şifre gerekli'; errBox.style.display = 'block'; return; }
+  try {
+    const r = await fetch(backendUrl + '/auth/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await r.json();
+    if (data.error) { errBox.textContent = data.error; errBox.style.display = 'block'; return; }
+    authToken = data.token;
+    currentUser = data.user;
+    localStorage.setItem('nutrilens_token', authToken);
+    localStorage.setItem('nutrilens_user', JSON.stringify(currentUser));
+    afterLogin();
+  } catch(err) { errBox.textContent = 'Bağlantı hatası'; errBox.style.display = 'block'; }
+}
+
+async function register() {
+  const first_name = document.getElementById('regFirstName').value.trim();
+  const last_name = document.getElementById('regLastName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const errBox = document.getElementById('registerError');
+  errBox.style.display = 'none';
+  if (!first_name || !last_name || !email || !password) { errBox.textContent = 'Tüm alanlar zorunlu'; errBox.style.display = 'block'; return; }
+  if (password.length < 6) { errBox.textContent = 'Şifre en az 6 karakter olmalı'; errBox.style.display = 'block'; return; }
+  try {
+    const r = await fetch(backendUrl + '/auth/register', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ first_name, last_name, email, password })
+    });
+    const data = await r.json();
+    if (data.error) { errBox.textContent = data.error; errBox.style.display = 'block'; return; }
+    authToken = data.token;
+    currentUser = data.user;
+    localStorage.setItem('nutrilens_token', authToken);
+    localStorage.setItem('nutrilens_user', JSON.stringify(currentUser));
+    afterLogin();
+  } catch(err) { errBox.textContent = 'Bağlantı hatası'; errBox.style.display = 'block'; }
+}
+
+function afterLogin() {
+  document.getElementById('authScreen').style.display = 'none';
+  if (!currentUser.height || !currentUser.weight) {
+    document.getElementById('profileSetup').style.display = 'block';
+  } else {
+    GOALS = calculateGoals(currentUser);
+    showMainApp();
+  }
+}
+
+function logout() {
+  authToken = null; currentUser = null;
+  localStorage.removeItem('nutrilens_token');
+  localStorage.removeItem('nutrilens_user');
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'block';
+  showLogin();
+}
+
+// Profil
 function calculateGoals(profile) {
   const { gender, age, height, weight, activity, goal } = profile;
-  let bmr;
-  if (gender === 'male') {
-    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-  } else {
-    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-  }
-  let tdee = bmr * parseFloat(activity);
+  let bmr = gender === 'male'
+    ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+    : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+  let tdee = bmr * parseFloat(activity || 1.55);
   if (goal === 'lose') tdee -= 500;
   else if (goal === 'gain') tdee += 300;
-
   const kcal = Math.round(tdee);
   const protein = Math.round(weight * 2);
   const fat = Math.round((kcal * 0.25) / 9);
   const carbs = Math.round((kcal - (protein * 4) - (fat * 9)) / 4);
-
   return { kcal, protein, carbs, fat };
 }
 
@@ -355,74 +492,56 @@ function selectGoal(el, goal) {
   el.classList.add('active');
 }
 
-function saveProfile() {
-  const name = document.getElementById('pName').value.trim();
+async function saveProfile() {
   const age = parseInt(document.getElementById('pAge').value);
   const gender = document.getElementById('pGender').value;
   const height = parseInt(document.getElementById('pHeight').value);
   const weight = parseInt(document.getElementById('pWeight').value);
   const activity = document.getElementById('pActivity').value;
-
-  if (!name || !age || !height || !weight) {
-    alert('Lütfen tüm alanları doldur!');
-    return;
-  }
-
-  const profile = { name, age, gender, height, weight, activity, goal: selectedGoal };
-  localStorage.setItem('nutrilens_profile', JSON.stringify(profile));
-
-  GOALS = calculateGoals(profile);
-  localStorage.setItem('nutrilens_goals', JSON.stringify(GOALS));
-
-  showMainApp(profile);
+  if (!age || !height || !weight) { alert('Tüm alanları doldur!'); return; }
+  try {
+    const r = await fetch(backendUrl + '/auth/profile', {
+      method: 'PUT', headers: getAuthHeaders(),
+      body: JSON.stringify({ gender, age, height, weight, activity, goal: selectedGoal })
+    });
+    const data = await r.json();
+    if (data.error) { alert(data.error); return; }
+    currentUser = data.user;
+    localStorage.setItem('nutrilens_user', JSON.stringify(currentUser));
+    GOALS = calculateGoals(currentUser);
+    document.getElementById('profileSetup').style.display = 'none';
+    showMainApp();
+  } catch(err) { alert('Hata: ' + err.message); }
 }
 
-function editProfile() {
-  document.getElementById('profileSetup').style.display = 'block';
+function showProfileEdit() {
   document.getElementById('mainApp').style.display = 'none';
-  const profile = JSON.parse(localStorage.getItem('nutrilens_profile') || '{}');
-  if (profile.name) {
-    document.getElementById('pName').value = profile.name;
-    document.getElementById('pAge').value = profile.age;
-    document.getElementById('pGender').value = profile.gender;
-    document.getElementById('pHeight').value = profile.height;
-    document.getElementById('pWeight').value = profile.weight;
-    document.getElementById('pActivity').value = profile.activity;
+  document.getElementById('profileSetup').style.display = 'block';
+  if (currentUser) {
+    if (currentUser.age) document.getElementById('pAge').value = currentUser.age;
+    if (currentUser.gender) document.getElementById('pGender').value = currentUser.gender;
+    if (currentUser.height) document.getElementById('pHeight').value = currentUser.height;
+    if (currentUser.weight) document.getElementById('pWeight').value = currentUser.weight;
+    if (currentUser.activity) document.getElementById('pActivity').value = currentUser.activity;
   }
 }
 
-function showMainApp(profile) {
+function showMainApp() {
   document.getElementById('profileSetup').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
-
   const goalLabels = { lose: 'Kilo ver', maintain: 'Koru', gain: 'Kilo al' };
-  const activityLabels = { '1.2': 'Hareketsiz', '1.375': 'Az aktif', '1.55': 'Orta aktif', '1.725': 'Çok aktif', '1.9': 'Ekstra aktif' };
-
-  document.getElementById('psName').textContent = profile.name;
-  document.getElementById('psDetail').textContent = `${profile.weight}kg · ${profile.height}cm · ${activityLabels[profile.activity]} · ${goalLabels[profile.goal]}`;
-  document.getElementById('psKcal').innerHTML = `${GOALS.kcal}<span>kcal hedef</span>`;
+  const actLabels = { '1.2': 'Hareketsiz', '1.375': 'Az aktif', '1.55': 'Orta aktif', '1.725': 'Çok aktif', '1.9': 'Ekstra aktif' };
+  document.getElementById('psName').textContent = `${currentUser.first_name} ${currentUser.last_name}`;
+  document.getElementById('psDetail').textContent = currentUser.weight ? `${currentUser.weight}kg · ${currentUser.height}cm · ${actLabels[currentUser.activity] || ''} · ${goalLabels[currentUser.goal] || ''}` : 'Profil tamamlanmadı';
+  document.getElementById('psKcal').innerHTML = `${GOALS.kcal}<span style="font-size:11px;color:#888;font-weight:400;"> kcal hedef</span>`;
   document.getElementById('kcalGoalLabel').textContent = `/ ${GOALS.kcal} kcal`;
   document.getElementById('proteinGoalLabel').textContent = `/ ${GOALS.protein}g`;
   document.getElementById('carbsGoalLabel').textContent = `/ ${GOALS.carbs}g`;
   document.getElementById('fatGoalLabel').textContent = `/ ${GOALS.fat}g`;
-
   initDate();
   initWater();
   checkBackend();
 }
-
-function init() {
-  const profile = JSON.parse(localStorage.getItem('nutrilens_profile') || 'null');
-  const goals = JSON.parse(localStorage.getItem('nutrilens_goals') || 'null');
-  if (profile && goals) {
-    GOALS = goals;
-    showMainApp(profile);
-  } else {
-    document.getElementById('profileSetup').style.display = 'block';
-  }
-}
-
-function getUrl() { return document.getElementById('backendUrl').value.replace(/\/$/, ''); }
 
 async function checkBackend() {
   const dot = document.getElementById('statusDot');
@@ -447,7 +566,7 @@ async function checkBackend() {
 async function loadMeals() {
   const date = new Date().toISOString().split('T')[0];
   try {
-    const r = await fetch(backendUrl + '/meals?date=' + date);
+    const r = await fetch(backendUrl + '/meals?date=' + date, { headers: getAuthHeaders() });
     meals = await r.json();
     updateTotals();
     renderMeals();
@@ -497,7 +616,11 @@ async function analyzeImage(dataUrl, file) {
   try {
     const formData = new FormData();
     formData.append('image', file);
-    const r = await fetch(backendUrl + '/analyze', { method:'POST', body: formData });
+    const r = await fetch(backendUrl + '/analyze', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      body: formData
+    });
     if (!r.ok) throw new Error('Backend hatası: ' + r.status);
     const data = await r.json();
     if (data.error) throw new Error(data.error);
@@ -537,8 +660,7 @@ async function saveMeal() {
   const date = new Date().toISOString().split('T')[0];
   try {
     const r = await fetch(backendUrl + '/meals', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+      method: 'POST', headers: getAuthHeaders(),
       body: JSON.stringify({ ...pending, date, image_base64: pendingImg })
     });
     const saved = await r.json();
@@ -546,18 +668,15 @@ async function saveMeal() {
     pending = null; pendingImg = null;
     document.getElementById('resultSection').style.display = 'none';
     document.getElementById('uploadSection').style.display = 'block';
-    updateTotals();
-    renderMeals();
-    switchTab('meals');
+    updateTotals(); renderMeals(); switchTab('meals');
   } catch(err) { alert('Kaydetme hatası: ' + err.message); }
 }
 
 async function deleteMeal(id, idx) {
   try {
-    await fetch(backendUrl + '/meals/' + id, { method:'DELETE' });
+    await fetch(backendUrl + '/meals/' + id, { method: 'DELETE', headers: getAuthHeaders() });
     meals.splice(idx, 1);
-    updateTotals();
-    renderMeals();
+    updateTotals(); renderMeals();
   } catch { alert('Silme hatası'); }
 }
 
@@ -576,40 +695,23 @@ function updateTotals() {
   document.getElementById('totalProtein').textContent = Math.round(t.protein);
   document.getElementById('totalCarbs').textContent = Math.round(t.carbs);
   document.getElementById('totalFat').textContent = Math.round(t.fat);
-
   const pct = (v,g) => Math.min(100,Math.round(v/g*100))+'%';
   document.getElementById('kcalBar').style.width = pct(t.kcal,GOALS.kcal);
   document.getElementById('proteinBar').style.width = pct(t.protein,GOALS.protein);
   document.getElementById('carbsBar').style.width = pct(t.carbs,GOALS.carbs);
   document.getElementById('fatBar').style.width = pct(t.fat,GOALS.fat);
 
-  // Kalan hedefler
   const remaining = {
-    kcal: Math.max(0, GOALS.kcal - t.kcal),
-    protein: Math.max(0, GOALS.protein - t.protein),
-    carbs: Math.max(0, GOALS.carbs - t.carbs),
-    fat: Math.max(0, GOALS.fat - t.fat)
+    kcal: Math.max(0, GOALS.kcal-t.kcal), protein: Math.max(0, GOALS.protein-t.protein),
+    carbs: Math.max(0, GOALS.carbs-t.carbs), fat: Math.max(0, GOALS.fat-t.fat)
   };
   document.getElementById('remainingGrid').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
-      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
-        <div style="font-size:18px;font-weight:500;color:#0F6E56;">${Math.round(remaining.kcal)}</div>
-        <div style="font-size:11px;color:#888;">kcal kalan</div>
-      </div>
-      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
-        <div style="font-size:18px;font-weight:500;color:#378ADD;">${Math.round(remaining.protein)}g</div>
-        <div style="font-size:11px;color:#888;">protein kalan</div>
-      </div>
-      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
-        <div style="font-size:18px;font-weight:500;color:#EF9F27;">${Math.round(remaining.carbs)}g</div>
-        <div style="font-size:11px;color:#888;">karb kalan</div>
-      </div>
-      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;">
-        <div style="font-size:18px;font-weight:500;color:#D85A30;">${Math.round(remaining.fat)}g</div>
-        <div style="font-size:11px;color:#888;">yağ kalan</div>
-      </div>
-    </div>
-  `;
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;"><div style="font-size:18px;font-weight:500;color:#0F6E56;">${Math.round(remaining.kcal)}</div><div style="font-size:11px;color:#888;">kcal kalan</div></div>
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;"><div style="font-size:18px;font-weight:500;color:#378ADD;">${Math.round(remaining.protein)}g</div><div style="font-size:11px;color:#888;">protein kalan</div></div>
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;"><div style="font-size:18px;font-weight:500;color:#EF9F27;">${Math.round(remaining.carbs)}g</div><div style="font-size:11px;color:#888;">karb kalan</div></div>
+      <div style="text-align:center;padding:8px;background:#f5f5f0;border-radius:8px;"><div style="font-size:18px;font-weight:500;color:#D85A30;">${Math.round(remaining.fat)}g</div><div style="font-size:11px;color:#888;">yağ kalan</div></div>
+    </div>`;
 
   if (meals.length > 0) {
     const micros = [['Lif',t.fiber,'g'],['Şeker',t.sugar,'g'],['Sodyum',t.sodium,'mg'],['Potasyum',t.potassium,'mg'],['Kalsiyum',t.calcium,'mg'],['Demir',t.iron,'mg'],['Vit. C',t.vitamin_c,'mg'],['Vit. A',t.vitamin_a,'mcg']];
@@ -635,131 +737,54 @@ function renderMeals() {
   `).join('');
 }
 
-init();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-let scatterChartInstance = null;
-
 function updateScatterChart() {
   const canvas = document.getElementById('scatterChart');
   const empty = document.getElementById('chartEmpty');
-
-  if (!meals.length) {
-    canvas.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
-
-  canvas.style.display = 'block';
-  empty.style.display = 'none';
-
-  const data = meals.map((m, i) => ({
-    x: i + 1,
-    y: Math.round(m.calories || 0),
-    label: m.name
-  }));
-
+  if (!meals.length) { canvas.style.display='none'; empty.style.display='block'; return; }
+  canvas.style.display='block'; empty.style.display='none';
+  const data = meals.map((m,i) => ({ x: i+1, y: Math.round(m.calories||0) }));
   if (scatterChartInstance) scatterChartInstance.destroy();
-
   scatterChartInstance = new Chart(canvas, {
     type: 'scatter',
     data: {
-      datasets: [{
-        label: 'Öğünler',
-        data: data,
-        backgroundColor: '#1D9E75',
-        borderColor: '#0F6E56',
-        pointRadius: 10,
-        pointHoverRadius: 13
-      }, {
-        label: 'Kalori Hedefi',
-        data: [{ x: 0, y: GOALS.kcal }, { x: meals.length + 1, y: GOALS.kcal }],
-        type: 'line',
-        borderColor: '#E24B4A',
-        borderDash: [6, 4],
-        borderWidth: 1.5,
-        pointRadius: 0,
-        fill: false
-      }]
+      datasets: [
+        { label: 'Öğünler', data, backgroundColor: '#1D9E75', borderColor: '#0F6E56', pointRadius: 10, pointHoverRadius: 13 },
+        { label: 'Hedef', data: [{x:0,y:GOALS.kcal},{x:meals.length+1,y:GOALS.kcal}], type:'line', borderColor:'#E24B4A', borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false }
+      ]
     },
     options: {
       responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              if (ctx.datasetIndex === 0) {
-                const m = meals[ctx.dataIndex];
-                return `${m.name}: ${Math.round(m.calories || 0)} kcal`;
-              }
-              return `Hedef: ${GOALS.kcal} kcal`;
-            }
-          }
-        }
-      },
+      plugins: { legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ctx.datasetIndex===0 ? `${meals[ctx.dataIndex].name}: ${Math.round(meals[ctx.dataIndex].calories||0)} kcal` : `Hedef: ${GOALS.kcal} kcal` } } },
       scales: {
-        x: {
-          title: { display: true, text: 'Öğün sırası', font: { size: 11 }, color: '#888' },
-          ticks: {
-            stepSize: 1,
-            callback: (val) => {
-              const m = meals[val - 1];
-              return m ? (m.name.length > 8 ? m.name.substring(0, 8) + '…' : m.name) : '';
-            }
-          },
-          min: 0,
-          max: meals.length + 1
-        },
-        y: {
-          title: { display: true, text: 'Kalori (kcal)', font: { size: 11 }, color: '#888' },
-          beginAtZero: true
-        }
+        x: { title:{display:true,text:'Öğün sırası',font:{size:11},color:'#888'}, ticks:{ stepSize:1, callback: val => { const m=meals[val-1]; return m?(m.name.length>8?m.name.substring(0,8)+'…':m.name):''; } }, min:0, max:meals.length+1 },
+        y: { title:{display:true,text:'Kalori (kcal)',font:{size:11},color:'#888'}, beginAtZero:true }
       }
     }
   });
 }
+
 async function loadSuggestions() {
   const area = document.getElementById('suggestionsArea');
   area.innerHTML = '<div style="text-align:center;padding:2rem;color:#888;font-size:13px;"><div class="spinner" style="margin:0 auto 12px;"></div>Öneriler hazırlanıyor...</div>';
-
   try {
     const date = new Date().toISOString().split('T')[0];
     const goalsStr = encodeURIComponent(JSON.stringify(GOALS));
-    const r = await fetch(`${backendUrl}/suggestions?date=${date}&goals=${goalsStr}`);
+    const r = await fetch(`${backendUrl}/suggestions?date=${date}&goals=${goalsStr}`, { headers: getAuthHeaders() });
     const data = await r.json();
-
     if (data.error) throw new Error(data.error);
-
-    const { suggestions, todayTotals } = data;
-
+    const { suggestions } = data;
     let html = '';
-
-    if (suggestions[0] && suggestions[0].weekly_tip) {
-      html += `<div style="background:#E1F5EE;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:13px;color:#0F6E56;">
-        📈 <strong>Haftalık trend:</strong> ${suggestions[0].weekly_tip}
-      </div>`;
+    if (suggestions[0]?.weekly_tip) {
+      html += `<div style="background:#E1F5EE;border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:13px;color:#0F6E56;">📈 <strong>Haftalık trend:</strong> ${suggestions[0].weekly_tip}</div>`;
     }
-
     suggestions.forEach(s => {
-      html += `
-        <div onclick="loadRecipe('${s.food.replace(/'/g, '')}')" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#1D9E75'" onmouseout="this.style.borderColor='#e0e0da'">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div style="flex:1;">
-              <div style="font-size:15px;font-weight:500;margin-bottom:3px;">🍽️ ${s.food}</div>
-              <div style="font-size:12px;color:#1D9E75;margin-bottom:3px;">💡 ${s.reason}</div>
-              <div style="font-size:12px;color:#888;">✅ ${s.nutrients}</div>
-            </div>
-            <div style="text-align:right;flex-shrink:0;margin-left:10px;">
-              <div style="font-size:16px;font-weight:500;color:#0F6E56;">${s.calories}</div>
-              <div style="font-size:11px;color:#aaa;">kcal</div>
-              <div style="font-size:11px;color:#1D9E75;margin-top:4px;">Tarif →</div>
-            </div>
-          </div>
-        </div>`;
+      html += `<div onclick="loadRecipe('${s.food.replace(/'/g,'')}')" style="background:white;border:0.5px solid #e0e0da;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;" onmouseover="this.style.borderColor='#1D9E75'" onmouseout="this.style.borderColor='#e0e0da'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:3px;">🍽️ ${s.food}</div><div style="font-size:12px;color:#1D9E75;margin-bottom:3px;">💡 ${s.reason}</div><div style="font-size:12px;color:#888;">✅ ${s.nutrients}</div></div>
+          <div style="text-align:right;flex-shrink:0;margin-left:10px;"><div style="font-size:16px;font-weight:500;color:#0F6E56;">${s.calories}</div><div style="font-size:11px;color:#aaa;">kcal</div><div style="font-size:11px;color:#1D9E75;margin-top:4px;">Tarif →</div></div>
+        </div>
+      </div>`;
     });
-
     area.innerHTML = html;
   } catch(err) {
     area.innerHTML = `<div style="background:#fef0f0;border:0.5px solid #f09595;border-radius:10px;padding:12px;font-size:13px;color:#a32d2d;">⚠️ ${err.message}</div>`;
@@ -771,29 +796,18 @@ async function loadRecipe(foodName) {
   const content = document.getElementById('recipeContent');
   modal.style.display = 'block';
   content.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="spinner" style="margin:0 auto 12px;"></div><p style="color:#888;font-size:13px;">Tarif hazırlanıyor...</p></div>';
-
   try {
-    const r = await fetch(`${backendUrl}/recipe?food=${encodeURIComponent(foodName)}`);
+    const r = await fetch(`${backendUrl}/recipe?food=${encodeURIComponent(foodName)}`, { headers: getAuthHeaders() });
     const recipe = await r.json();
-
     if (recipe.error) throw new Error(recipe.error);
-
     content.innerHTML = `
       <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">🍽️ ${recipe.name}</h2>
       <div style="font-size:13px;color:#888;margin-bottom:16px;">⏱️ ${recipe.time} · 👤 ${recipe.servings}</div>
-
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:#1a1a18;">Malzemeler</div>
-      <ul style="list-style:none;margin-bottom:16px;">
-        ${recipe.ingredients.map(i => `<li style="font-size:13px;padding:4px 0;border-bottom:0.5px solid #f0f0ea;">• ${i}</li>`).join('')}
-      </ul>
-
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:#1a1a18;">Yapılışı</div>
-      <ol style="padding-left:16px;margin-bottom:16px;">
-        ${recipe.steps.map(s => `<li style="font-size:13px;padding:4px 0;color:#444;">${s}</li>`).join('')}
-      </ol>
-
-      ${recipe.tip ? `<div style="background:#E1F5EE;border-radius:8px;padding:10px;font-size:13px;color:#0F6E56;">💡 <strong>Püf nokta:</strong> ${recipe.tip}</div>` : ''}
-    `;
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Malzemeler</div>
+      <ul style="list-style:none;margin-bottom:16px;">${recipe.ingredients.map(i=>`<li style="font-size:13px;padding:4px 0;border-bottom:0.5px solid #f0f0ea;">• ${i}</li>`).join('')}</ul>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Yapılışı</div>
+      <ol style="padding-left:16px;margin-bottom:16px;">${recipe.steps.map(s=>`<li style="font-size:13px;padding:4px 0;color:#444;">${s}</li>`).join('')}</ol>
+      ${recipe.tip?`<div style="background:#E1F5EE;border-radius:8px;padding:10px;font-size:13px;color:#0F6E56;">💡 <strong>Püf nokta:</strong> ${recipe.tip}</div>`:''}`;
   } catch(err) {
     content.innerHTML = `<div style="color:#a32d2d;font-size:13px;">⚠️ ${err.message}</div>`;
   }
@@ -801,5 +815,23 @@ async function loadRecipe(foodName) {
 
 function closeRecipe() {
   document.getElementById('recipeModal').style.display = 'none';
-}   </script> </body>
+}
+
+// Başlangıç
+function init() {
+  checkBackendAuth();
+  if (authToken && currentUser) {
+    document.getElementById('authScreen').style.display = 'none';
+    if (!currentUser.height || !currentUser.weight) {
+      document.getElementById('profileSetup').style.display = 'block';
+    } else {
+      GOALS = calculateGoals(currentUser);
+      showMainApp();
+    }
+  }
+}
+
+init();
+</script>
+</body>
 </html>
