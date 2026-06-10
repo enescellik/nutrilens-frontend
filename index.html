@@ -350,6 +350,14 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
   </div>
 </div>
 
+  <!-- Öğün detay modal -->
+<div id="mealDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;overflow-y:auto;padding:1rem;">
+  <div style="background:white;border-radius:12px;max-width:480px;margin:0 auto;padding:20px;position:relative;">
+    <button onclick="closeMealDetail()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#888;">✕</button>
+    <div id="mealDetailContent"></div>
+  </div>
+</div>
+  
 <!-- Tarif modal -->
 <div id="recipeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;overflow-y:auto;padding:1rem;">
   <div style="background:white;border-radius:12px;max-width:480px;margin:0 auto;padding:20px;position:relative;">
@@ -723,7 +731,7 @@ function renderMeals() {
   const list = document.getElementById('mealsList');
   if (!meals.length) { list.innerHTML = '<div class="empty-state"><i class="ti ti-camera-off"></i>Henüz öğün eklenmedi.</div>'; return; }
   list.innerHTML = meals.map((m,i) => `
-    <div class="meal-item">
+    <div class="meal-item" onclick="showMealDetail(${i})" style="cursor:pointer;" onmouseover="this.style.background='#f9f9f7'" onmouseout="this.style.background='white'">
       <div class="meal-thumb">${m.image_base64||m.imgSrc?`<img src="${m.image_base64||m.imgSrc}" alt="${m.name}">`:'🥗'}</div>
       <div class="meal-info">
         <div class="meal-name">${m.name||'Yemek'}</div>
@@ -731,10 +739,66 @@ function renderMeals() {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
         <div class="meal-kcal">${Math.round(m.calories||0)}<span style="font-size:11px;font-weight:400;color:#888;">kcal</span></div>
-        <button class="delete-btn" onclick="deleteMeal(${m.id},${i})">🗑</button>
+        <button class="delete-btn" onclick="event.stopPropagation();deleteMeal(${m.id},${i})">🗑</button>
       </div>
     </div>
   `).join('');
+}
+
+function showMealDetail(idx) {
+  const m = meals[idx];
+  const modal = document.getElementById('mealDetailModal');
+  const content = document.getElementById('mealDetailContent');
+  modal.style.display = 'block';
+  content.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;">
+      ${m.image_base64||m.imgSrc ? `<img src="${m.image_base64||m.imgSrc}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;">` : '<div style="width:80px;height:80px;border-radius:10px;background:#f5f5f0;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;">🥗</div>'}
+      <div>
+        <div style="font-size:17px;font-weight:500;margin-bottom:4px;">${m.name||'Yemek'}</div>
+        <div style="font-size:13px;color:#888;margin-bottom:4px;">${m.description||''}</div>
+        <div style="font-size:13px;color:#888;">${m.portion||''}</div>
+        ${m.source ? `<span style="font-size:11px;color:#1D9E75;background:#E1F5EE;padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;">📌 ${m.source}</span>` : ''}
+      </div>
+    </div>
+
+    <div style="font-size:28px;font-weight:500;color:#0F6E56;text-align:center;margin-bottom:12px;">
+      ${Math.round(m.calories||0)} <span style="font-size:14px;font-weight:400;color:#888;">kcal</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+      <div style="text-align:center;background:#E6F1FB;border-radius:8px;padding:10px;">
+        <div style="font-size:18px;font-weight:500;color:#185FA5;">${Math.round(m.protein||0)}g</div>
+        <div style="font-size:11px;color:#378ADD;">Protein</div>
+      </div>
+      <div style="text-align:center;background:#FAEEDA;border-radius:8px;padding:10px;">
+        <div style="font-size:18px;font-weight:500;color:#854F0B;">${Math.round(m.carbs||0)}g</div>
+        <div style="font-size:11px;color:#EF9F27;">Karbonhidrat</div>
+      </div>
+      <div style="text-align:center;background:#FAECE7;border-radius:8px;padding:10px;">
+        <div style="font-size:18px;font-weight:500;color:#993C1D;">${Math.round(m.fat||0)}g</div>
+        <div style="font-size:11px;color:#D85A30;">Yağ</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Mikro Besinler</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0;">
+      ${[['Lif',m.fiber,'g'],['Şeker',m.sugar,'g'],['Sodyum',m.sodium,'mg'],['Potasyum',m.potassium,'mg'],['Kalsiyum',m.calcium,'mg'],['Demir',m.iron,'mg'],['Vit. C',m.vitamin_c,'mg'],['Vit. A',m.vitamin_a,'mcg']].map(([n,v,u]) => `
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:0.5px solid #f0f0ea;">
+          <span style="color:#888;">${n}</span>
+          <span style="font-weight:500;">${v!=null?parseFloat(v).toFixed(1)+u:'—'}</span>
+        </div>`).join('')}
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:space-between;">
+      <button class="btn" style="flex:1;justify-content:center;" onclick="closeMealDetail()">Kapat</button>
+      <button class="btn" style="flex:1;justify-content:center;color:#E24B4A;border-color:#E24B4A;" onclick="closeMealDetail();deleteMeal(${m.id},${idx})">🗑 Sil</button>
+    </div>
+  `;
+}
+
+function closeMealDetail() {
+  document.getElementById('mealDetailModal').style.display = 'none';
+}
 }
 
 function updateScatterChart() {
