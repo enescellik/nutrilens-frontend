@@ -583,10 +583,11 @@ async function loadMeals() {
   const date = new Date().toISOString().split('T')[0];
   try {
     const r = await fetch(backendUrl + '/meals?date=' + date, { headers: getAuthHeaders() });
-    meals = await r.json();
+    const data = await r.json();
+    meals = Array.isArray(data) ? data : [];
     updateTotals();
     renderMeals();
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error(e); meals = []; }
 }
 
 function initDate() {
