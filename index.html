@@ -173,11 +173,11 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
       <div class="form-row">
         <div class="form-group">
           <label>Boy (cm)</label>
-          <input type="number" id="pHeight" placeholder="175">
+          <input type="number" id="pHeight" placeholder="175" oninput="updateBMI()">
         </div>
         <div class="form-group">
           <label>Kilo (kg)</label>
-          <input type="number" id="pWeight" placeholder="70">
+          <input type="number" id="pWeight" placeholder="70" oninput="updateBMI()">
         </div>
       </div>
       <div class="form-group">
@@ -197,6 +197,36 @@ body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; 
           <span class="goal-badge" onclick="selectGoal(this,'maintain')">➡️ Koru</span>
           <span class="goal-badge" onclick="selectGoal(this,'gain')">⬆️ Kilo al</span>
         </div>
+      </div>
+      <div id="bmiSection" style="display:none;background:#f5f5f0;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:13px;font-weight:500;">Mevcut BMI</span>
+          <span id="bmiValue" style="font-size:16px;font-weight:500;">—</span>
+        </div>
+        <div style="height:6px;background:#e0e0da;border-radius:3px;margin-bottom:6px;position:relative;">
+          <div id="bmiBar" style="height:100%;border-radius:3px;transition:width 0.4s;background:#1D9E75;width:0%;"></div>
+        </div>
+        <div style="font-size:11px;color:#888;" id="bmiLabel">—</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:0.5px solid #e0e0da;">
+          <div style="font-size:12px;color:#888;margin-bottom:4px;">Sağlıklı kilo aralığı</div>
+          <div style="font-size:14px;font-weight:500;color:#0F6E56;" id="healthyRange">—</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Hedef Kilo (kg) <span style="color:#aaa;font-size:11px;">— opsiyonel</span></label>
+        <input type="number" id="pTargetWeight" placeholder="Boş bırakırsan sağlıklı kilo önerilir" min="30" max="300" oninput="updateBMI()">
+      </div>
+
+      <div class="form-group" id="weeklyLossGroup" style="display:none;">
+        <label>Haftalık kilo kaybı hedefi</label>
+        <select id="pWeeklyLoss">
+          <option value="0.25">0.25 kg/hafta (çok yavaş, kolay)</option>
+          <option value="0.5" selected>0.5 kg/hafta (önerilen)</option>
+          <option value="0.75">0.75 kg/hafta (orta)</option>
+          <option value="1">1 kg/hafta (hızlı)</option>
+        </select>
+        <div id="weeklyLossInfo" style="font-size:12px;color:#1D9E75;margin-top:4px;"></div>
       </div>
       <button class="btn btn-primary btn-full" onclick="saveProfile()" style="margin-top:8px;">Kaydet ve Başla</button>
     </div>
@@ -488,13 +518,21 @@ function logout() {
 
 // Profil
 function calculateGoals(profile) {
-  const { gender, age, height, weight, activity, goal } = profile;
+  const { gender, age, height, weight, activity, goal, target_weight, weekly_loss } = profile;
   let bmr = gender === 'male'
     ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
     : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
   let tdee = bmr * parseFloat(activity || 1.55);
-  if (goal === 'lose') tdee -= 500;
-  else if (goal === 'gain') tdee += 300;
+  
+  if (target_weight && weight) {
+    const dailyDeficit = (parseFloat(weekly_loss || 0.5) * 7700) / 7;
+    if (goal === 'lose' && weight > target_weight) tdee -= dailyDeficit;
+    else if (goal === 'gain' && weight < target_weight) tdee += dailyDeficit;
+  } else {
+    if (goal === 'lose') tdee -= 500;
+    else if (goal === 'gain') tdee += 300;
+  }
+
   const kcal = Math.round(tdee);
   const protein = Math.round(weight * 2);
   const fat = Math.round((kcal * 0.25) / 9);
@@ -506,19 +544,74 @@ function selectGoal(el, goal) {
   selectedGoal = goal;
   document.querySelectorAll('.goal-badge').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
+  updateBMI();
 }
 
+function updateBMI() {
+  const height = parseFloat(document.getElementById('pHeight').value);
+  const weight = parseFloat(document.getElementById('pWeight').value);
+  const targetWeight = parseFloat(document.getElementById('pTargetWeight').value);
+  
+  if (!height || !weight) {
+    document.getElementById('bmiSection').style.display = 'none';
+    return;
+  }
+
+  const h = height / 100;
+  const bmi = weight / (h * h);
+  const minHealthy = Math.round(18.5 * h * h * 10) / 10;
+  const maxHealthy = Math.round(24.9 * h * h * 10) / 10;
+
+  document.getElementById('bmiSection').style.display = 'block';
+  document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+  document.getElementById('healthyRange').textContent = `${minHealthy} kg — ${maxHealthy} kg`;
+
+  let bmiLabel, bmiColor, bmiPct;
+  if (bmi < 18.5) { bmiLabel = '⚠️ Zayıf'; bmiColor = '#378ADD'; bmiPct = (bmi / 18.5) * 30; }
+  else if (bmi < 25) { bmiLabel = '✅ Normal'; bmiColor = '#1D9E75'; bmiPct = 30 + ((bmi - 18.5) / 6.4) * 30; }
+  else if (bmi < 30) { bmiLabel = '⚠️ Fazla kilolu'; bmiColor = '#EF9F27'; bmiPct = 60 + ((bmi - 25) / 5) * 20; }
+  else { bmiLabel = '🔴 Obez'; bmiColor = '#E24B4A'; bmiPct = 80 + Math.min(20, ((bmi - 30) / 10) * 20); }
+
+  document.getElementById('bmiLabel').textContent = `BMI ${bmi.toFixed(1)} — ${bmiLabel}`;
+  document.getElementById('bmiBar').style.width = Math.min(100, bmiPct) + '%';
+  document.getElementById('bmiBar').style.background = bmiColor;
+  document.getElementById('bmiValue').style.color = bmiColor;
+
+  // Hedef kilo ve haftalık kayıp
+  const effectiveTarget = targetWeight || minHealthy;
+  const diff = weight - effectiveTarget;
+  
+  if (selectedGoal === 'lose' && diff > 0) {
+    document.getElementById('weeklyLossGroup').style.display = 'block';
+    const weeklyLoss = parseFloat(document.getElementById('pWeeklyLoss')?.value || 0.5);
+    const weeks = Math.round(diff / weeklyLoss);
+    document.getElementById('weeklyLossInfo').textContent = 
+      `${effectiveTarget}kg hedefine yaklaşık ${weeks} haftada ulaşırsın`;
+  } else if (selectedGoal === 'gain' && diff < 0) {
+    document.getElementById('weeklyLossGroup').style.display = 'block';
+    const weeks = Math.round(Math.abs(diff) / 0.25);
+    document.getElementById('weeklyLossInfo').textContent = 
+      `${effectiveTarget}kg hedefine yaklaşık ${weeks} haftada ulaşırsın`;
+    document.getElementById('weeklyLossGroup').querySelector('label').textContent = 'Haftalık kilo artışı hedefi';
+  } else {
+    document.getElementById('weeklyLossGroup').style.display = 'none';
+  }
+}
+  
 async function saveProfile() {
   const age = parseInt(document.getElementById('pAge').value);
   const gender = document.getElementById('pGender').value;
   const height = parseInt(document.getElementById('pHeight').value);
   const weight = parseInt(document.getElementById('pWeight').value);
   const activity = document.getElementById('pActivity').value;
-  if (!age || !height || !weight) { alert('Tüm alanları doldur!'); return; }
+  const target_weight = parseFloat(document.getElementById('pTargetWeight').value) || null;
+  const weekly_loss = parseFloat(document.getElementById('pWeeklyLoss')?.value || 0.5);
+
+  if (!age || !height || !weight) { alert('Yaş, boy ve kilo zorunlu!'); return; }
   try {
     const r = await fetch(backendUrl + '/auth/profile', {
       method: 'PUT', headers: getAuthHeaders(),
-      body: JSON.stringify({ gender, age, height, weight, activity, goal: selectedGoal })
+      body: JSON.stringify({ gender, age, height, weight, target_weight, weekly_loss, activity, goal: selectedGoal })
     });
     const data = await r.json();
     if (data.error) { alert(data.error); return; }
