@@ -384,19 +384,27 @@ function getUrl() { return document.getElementById('backendUrl')?.value.replace(
 function getAuthHeaders() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }; }
 
 // Auth fonksiyonları
-async function checkBackendAuth() {
-  const dot = document.getElementById('authStatusDot');
-  const txt = document.getElementById('authStatusText');
+async function checkBackend() {
+  // Auth ekranı mı ana uygulama mı kontrol et
+  const isAuthScreen = document.getElementById('authScreen').style.display !== 'none';
+  
+  const dotId = isAuthScreen ? 'authStatusDot' : 'statusDot';
+  const txtId = isAuthScreen ? 'authStatusText' : 'statusText';
+  const urlId = isAuthScreen ? 'authBackendUrl' : 'backendUrl';
+  
+  const dot = document.getElementById(dotId);
+  const txt = document.getElementById(txtId);
   dot.className = 'status-dot dot-gray';
   txt.textContent = 'Bağlanıyor...';
   try {
-    const url = document.getElementById('authBackendUrl').value.replace(/\/$/, '');
+    const url = document.getElementById(urlId).value.replace(/\/$/, '');
     const r = await fetch(url + '/health');
     const d = await r.json();
     if (d.status === 'ok') {
       dot.className = 'status-dot dot-green';
       txt.textContent = 'Backend bağlı ✓';
       backendUrl = url;
+      if (!isAuthScreen) loadMeals();
     } else throw new Error();
   } catch {
     dot.className = 'status-dot dot-red';
@@ -882,7 +890,7 @@ function closeRecipe() {
 
 // Başlangıç
 function init() {
-  checkBackendAuth();
+  checkBackend();
   if (authToken && currentUser) {
     document.getElementById('authScreen').style.display = 'none';
     if (!currentUser.height || !currentUser.weight) {
