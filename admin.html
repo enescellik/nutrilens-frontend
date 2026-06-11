@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriLens Admin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #f5f5f0; color: #1a1a18; min-height: 100vh; }
+.app { max-width: 900px; margin: 0 auto; padding: 1rem; }
+.header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; margin-bottom: 1rem; border-bottom: 0.5px solid #e0e0da; }
+.header h1 { font-size: 20px; font-weight: 500; }
+.card { background: white; border-radius: 12px; border: 0.5px solid #e0e0da; padding: 20px; margin-bottom: 1rem; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 0.5px solid #ccc; background: white; color: #1a1a18; font-family: inherit; transition: all 0.15s; }
+.btn:hover { background: #f5f5f0; }
+.btn-primary { background: #1D9E75; border-color: #1D9E75; color: white; }
+.btn-primary:hover { background: #0F6E56; }
+.btn-danger { background: #fef0f0; border-color: #f09595; color: #a32d2d; }
+.btn-danger:hover { background: #f7c1c1; }
+.btn-full { width: 100%; justify-content: center; padding: 12px; font-size: 15px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+.form-group input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 0.5px solid #ccc; font-size: 14px; font-family: inherit; background: #f9f9f7; }
+.form-group input:focus { outline: none; border-color: #1D9E75; }
+.error-box { background: #fef0f0; border: 0.5px solid #f09595; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #a32d2d; margin-bottom: 1rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1rem; }
+.stat-card { background: white; border-radius: 10px; border: 0.5px solid #e0e0da; padding: 16px; text-align: center; }
+.stat-card .sv { font-size: 28px; font-weight: 500; color: #0F6E56; }
+.stat-card .sl { font-size: 12px; color: #888; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0da; color: #888; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 10px 12px; border-bottom: 0.5px solid #f0f0ea; }
+tr:hover td { background: #f9f9f7; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+.badge-green { background: #E1F5EE; color: #0F6E56; }
+.badge-blue { background: #E6F1FB; color: #185FA5; }
+.spinner { width: 24px; height: 24px; border: 2px solid #e0e0da; border-top-color: #1D9E75; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 2rem auto; display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 1rem; }
+.modal-content { background: white; border-radius: 12px; max-width: 600px; margin: 0 auto; padding: 20px; position: relative; }
+.section-title { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 16px; }
+.meal-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid #f0f0ea; font-size: 13px; }
+.meal-row .mn { font-weight: 500; }
+.meal-row .mc { color: #0F6E56; font-weight: 500; }
+.meal-row .md { color: #888; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Giriş ekranı -->
+  <div id="loginScreen">
+    <div style="max-width:360px;margin:4rem auto;">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <h1 style="font-size:22px;font-weight:500;">🥗 NutriLens Admin</h1>
+        <p style="font-size:13px;color:#888;margin-top:4px;">Yönetim paneli</p>
+      </div>
+      <div class="card">
+        <div id="loginError" style="display:none;" class="error-box"></div>
+        <div class="form-group">
+          <label>Backend URL</label>
+          <input type="text" id="adminBackendUrl" value="https://nutrilens-backend-production-3238.up.railway.app">
+        </div>
+        <div class="form-group">
+          <label>Admin Şifresi</label>
+          <input type="password" id="adminPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="adminLogin()">Giriş Yap</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin paneli -->
+  <div id="adminPanel" style="display:none;">
+    <div class="header">
+      <h1>🥗 NutriLens Admin</h1>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:12px;color:#888;" id="lastRefresh"></span>
+        <button class="btn" onclick="loadAll()">🔄 Yenile</button>
+        <button class="btn btn-danger" onclick="adminLogout()">Çıkış</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="sv" id="statUsers">—</div>
+        <div class="sl">Toplam Kullanıcı</div>
+      </div>
+      <div class="stat-card">
+        <div class="sv" id="statMeals">—</div>
+        <div class="sl">Toplam Öğün</div>
+      </div>
+      <div class="stat-card">
+        <div class="sv" id="statCalories">—</div>
+        <div class="sl">Toplam Kalori</div>
+      </div>
+      <div class="stat-card">
+        <div class="sv" id="statToday">—</div>
+        <div class="sl">Bugünkü Öğün</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:16px;font-weight:500;margin-bottom:16px;">Kullanıcılar</h2>
+      <div id="usersTable">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Kullanıcı detay modal -->
+<div class="modal" id="userModal">
+  <div class="modal-content">
+    <button onclick="closeUserModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#888;">✕</button>
+    <div id="userModalContent"></div>
+  </div>
+</div>
+
+<script>
+let adminPassword = '';
+let backendUrl = '';
+
+function adminLogin() {
+  const url = document.getElementById('adminBackendUrl').value.trim().replace(/\/$/, '');
+  const password = document.getElementById('adminPassword').value;
+  const errBox = document.getElementById('loginError');
+  errBox.style.display = 'none';
+  if (!url || !password) { errBox.textContent = 'URL ve şifre gerekli'; errBox.style.display = 'block'; return; }
+  backendUrl = url;
+  adminPassword = password;
+  fetch(backendUrl + '/admin/stats', { headers: { 'x-admin-password': adminPassword } })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { errBox.textContent = 'Şifre hatalı'; errBox.style.display = 'block'; return; }
+      localStorage.setItem('admin_password', adminPassword);
+      localStorage.setItem('admin_backend', backendUrl);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      updateStats(data);
+      loadUsers();
+    })
+    .catch(() => { errBox.textContent = 'Bağlantı hatası'; errBox.style.display = 'block'; });
+}
+
+function adminLogout() {
+  localStorage.removeItem('admin_password');
+  localStorage.removeItem('admin_backend');
+  adminPassword = ''; backendUrl = '';
+  document.getElementById('loginScreen').style.display = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+function adminHeaders() {
+  return { 'x-admin-password': adminPassword, 'Content-Type': 'application/json' };
+}
+
+function updateStats(data) {
+  document.getElementById('statUsers').textContent = data.total_users;
+  document.getElementById('statMeals').textContent = data.total_meals;
+  document.getElementById('statCalories').textContent = (data.total_calories || 0).toLocaleString();
+  document.getElementById('statToday').textContent = data.today_meals;
+  document.getElementById('lastRefresh').textContent = 'Son güncelleme: ' + new Date().toLocaleTimeString('tr-TR');
+}
+
+async function loadAll() {
+  const r = await fetch(backendUrl + '/admin/stats', { headers: adminHeaders() });
+  const data = await r.json();
+  updateStats(data);
+  loadUsers();
+}
+
+async function loadUsers() {
+  const container = document.getElementById('usersTable');
+  container.innerHTML = '<div class="spinner"></div>';
+  try {
+    const r = await fetch(backendUrl + '/admin/users', { headers: adminHeaders() });
+    const users = await r.json();
+    if (!users.length) { container.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:2rem;">Henüz kullanıcı yok.</p>'; return; }
+    container.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ad Soyad</th>
+            <th>E-posta</th>
+            <th>Profil</th>
+            <th>Öğün</th>
+            <th>Toplam Kalori</th>
+            <th>Kayıt Tarihi</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users.map(u => `
+            <tr>
+              <td style="color:#888;">#${u.id}</td>
+              <td><strong>${u.first_name} ${u.last_name}</strong></td>
+              <td style="color:#888;">${u.email}</td>
+              <td>
+                ${u.weight ? `<span class="badge badge-green">${u.weight}kg · ${u.height}cm</span>` : '<span class="badge" style="background:#f5f5f0;color:#888;">Eksik</span>'}
+              </td>
+              <td><span class="badge badge-blue">${u.meal_count} öğün</span></td>
+              <td style="color:#0F6E56;font-weight:500;">${Math.round(u.total_calories).toLocaleString()} kcal</td>
+              <td style="color:#888;">${new Date(u.created_at).toLocaleDateString('tr-TR')}</td>
+              <td style="display:flex;gap:6px;">
+                <button class="btn" style="padding:4px 10px;font-size:12px;" onclick="showUserDetail(${u.id})">Detay</button>
+                <button class="btn btn-danger" style="padding:4px 10px;font-size:12px;" onclick="deleteUser(${u.id},'${u.first_name} ${u.last_name}')">Sil</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch(err) {
+    container.innerHTML = `<div class="error-box">${err.message}</div>`;
+  }
+}
+
+async function showUserDetail(userId) {
+  const modal = document.getElementById('userModal');
+  const content = document.getElementById('userModalContent');
+  modal.style.display = 'block';
+  content.innerHTML = '<div class="spinner"></div>';
+  try {
+    const r = await fetch(backendUrl + '/admin/users/' + userId, { headers: adminHeaders() });
+    const data = await r.json();
+    const u = data.user;
+    const goalLabels = { lose: 'Kilo ver', maintain: 'Koru', gain: 'Kilo al' };
+    const actLabels = { '1.2': 'Hareketsiz', '1.375': 'Az aktif', '1.55': 'Orta aktif', '1.725': 'Çok aktif', '1.9': 'Ekstra aktif' };
+    content.innerHTML = `
+      <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">${u.first_name} ${u.last_name}</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;">${u.email}</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+        <div style="text-align:center;background:#f5f5f0;border-radius:8px;padding:10px;">
+          <div style="font-size:16px;font-weight:500;">${u.age || '—'}</div>
+          <div style="font-size:11px;color:#888;">Yaş</div>
+        </div>
+        <div style="text-align:center;background:#f5f5f0;border-radius:8px;padding:10px;">
+          <div style="font-size:16px;font-weight:500;">${u.height || '—'} cm</div>
+          <div style="font-size:11px;color:#888;">Boy</div>
+        </div>
+        <div style="text-align:center;background:#f5f5f0;border-radius:8px;padding:10px;">
+          <div style="font-size:16px;font-weight:500;">${u.weight || '—'} kg</div>
+          <div style="font-size:11px;color:#888;">Kilo</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:#888;margin-bottom:16px;">
+        ${u.gender === 'male' ? '👨 Erkek' : '👩 Kadın'} · 
+        ${actLabels[u.activity] || '—'} · 
+        Hedef: ${goalLabels[u.goal] || '—'}
+      </div>
+      <div class="section-title">Son Öğünler (${data.meals.length})</div>
+      ${data.meals.length ? data.meals.map(m => `
+        <div class="meal-row">
+          <div>
+            <div class="mn">${m.name || 'Yemek'}</div>
+            <div class="md">${m.date} · P:${Math.round(m.protein||0)}g K:${Math.round(m.carbs||0)}g Y:${Math.round(m.fat||0)}g</div>
+          </div>
+          <div class="mc">${Math.round(m.calories||0)} kcal</div>
+        </div>`).join('') : '<p style="color:#888;font-size:13px;padding:1rem 0;">Henüz öğün yok.</p>'}
+      <div style="margin-top:16px;display:flex;gap:8px;">
+        <button class="btn" style="flex:1;justify-content:center;" onclick="closeUserModal()">Kapat</button>
+        <button class="btn btn-danger" style="flex:1;justify-content:center;" onclick="closeUserModal();deleteUser(${u.id},'${u.first_name} ${u.last_name}')">Kullanıcıyı Sil</button>
+      </div>`;
+  } catch(err) {
+    content.innerHTML = `<div class="error-box">${err.message}</div>`;
+  }
+}
+
+async function deleteUser(userId, name) {
+  if (!confirm(`"${name}" kullanıcısını ve tüm öğünlerini silmek istediğine emin misin?`)) return;
+  try {
+    const r = await fetch(backendUrl + '/admin/users/' + userId, { method: 'DELETE', headers: adminHeaders() });
+    const data = await r.json();
+    if (data.error) { alert('Hata: ' + data.error); return; }
+    alert('Kullanıcı silindi!');
+    loadAll();
+  } catch(err) { alert('Hata: ' + err.message); }
+}
+
+function closeUserModal() {
+  document.getElementById('userModal').style.display = 'none';
+}
+
+// Otomatik giriş
+const savedPassword = localStorage.getItem('admin_password');
+const savedBackend = localStorage.getItem('admin_backend');
+if (savedPassword && savedBackend) {
+  document.getElementById('adminPassword').value = savedPassword;
+  document.getElementById('adminBackendUrl').value = savedBackend;
+  backendUrl = savedBackend;
+  adminPassword = savedPassword;
+  fetch(backendUrl + '/admin/stats', { headers: { 'x-admin-password': adminPassword } })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.error) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        updateStats(data);
+        loadUsers();
+      }
+    }).catch(() => {});
+}
+</script>
+</body>
+</html>
